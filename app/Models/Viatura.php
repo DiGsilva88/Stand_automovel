@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Viatura extends Model
 {
     use HasFactory; // Adicionar esta linha
+    protected $table = 'viaturas';
+
     protected $fillable = [
-      'marca', 'modelo', 'matricula', 'ano',
-        'quilometros', 'preco', 'foto', 'estado'
+        'marca', 'modelo', 'ano', 'preco', 'descricao'
     ];
 
     public function vendas()

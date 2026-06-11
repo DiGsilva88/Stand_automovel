@@ -1,14 +1,26 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ViaturaController;
 use App\Http\Controllers\VendaController;
 
-Route::get('/', function () {
-    return redirect()->route('viaturas.index');
+// Redireciona a página inicial diretamente para as viaturas
+// Route::redirect('/', '/viaturas');
+
+// Rotas públicas (LIVRES DE LOGIN) para testar o CRUD à vontade
+
+Route::get('/viaturas', [ViaturaController::class, 'index'])->name('viaturas.index');
+//Route::resource('viaturas', ViaturaController::class);
+
+
+
+Route::resource('vendas', VendaController::class);
+
+// Se o Breeze criou uma rota de dashboard, pode deixá-la aqui em baixo isolada
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 });
 
-Route::resource('clientes', ClienteController::class);
-Route::resource('viaturas', ViaturaController::class);
-Route::resource('vendas', VendaController::class);
+require __DIR__.'/auth.php';
