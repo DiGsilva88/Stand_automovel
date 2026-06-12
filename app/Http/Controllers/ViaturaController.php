@@ -101,37 +101,44 @@ class ViaturaController extends Controller
      */
     public function update(Request $request, Viatura $viatura)
     {
+        // 1. Validar os dados recebidos
         $request->validate([
             'marca' => 'required|string|max:255',
             'modelo' => 'required|string|max:255',
-            'matricula' => 'required|string|max:20|unique:viaturas,matricula,' . $viatura->id,
-            'ano' => 'required|integer|min:1900|max:' . date('Y'),
-            'quilometros' => 'required|integer|min:0',
-            'preco' => 'required|numeric|min:0',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'estado' => 'required|string|max:255',
+            'ano' => 'required|integer',
+            'quilometros' => 'required|integer',
+            'preco' => 'required',
+            'estado' => 'required|string',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
-        $dados = $request->except('foto');
+        // 2. Tratar o Preço (substituir vírgula por ponto para o MySQL)
+        $precoFormatado = str_replace(',', '.', $request->preco);
 
-        // Se uma nova foto for enviada, remove a antiga e guarda a nova
+        // 3. Recolher os dados do formulário
+        $dados = $request->only(['marca', 'modelo', 'ano', 'quilometros', 'estado']);
+        $dados['preco'] = $precoFormatado;
+
+        // 4. Tratar o Upload da Nova Foto (se o utilizador escolher uma)
         if ($request->hasFile('foto')) {
+            // Remover a foto antiga da pasta se ela existir para não acumular lixo
             if ($viatura->foto && File::exists(public_path($viatura->foto))) {
                 File::delete(public_path($viatura->foto));
             }
 
-            $foto = $request->file('foto');
-            $nomeFoto = time() . '_' . $foto->getClientOriginalName();
-            $foto->move(public_path('fotos'), $nomeFoto);
+            // Gravar a nova foto com um nome único
+            $ficheiro = $request->file('foto');
+            $nomeFoto = time() . '_' . $ficheiro->getClientOriginalName();
+            $ficheiro->move(public_path('fotos'), $nomeFoto);
+
             $dados['foto'] = 'fotos/' . $nomeFoto;
         }
 
+        // 5. Atualizar na Base de Dados
         $viatura->update($dados);
 
-        return redirect()->route('viaturas.index')
-            ->with('success', 'Viatura atualizada com sucesso!');
+        return redirect()->route('viaturas.index')->with('success', 'Viatura atualizada com sucesso!');
     }
-
     /**
      * Remover uma viatura e o seu respetivo ficheiro de imagem.
      */

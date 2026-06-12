@@ -12,9 +12,9 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes=Cliente::latest()->paginate(10);
-        return view('clientes.index',compact('clientes'))
-            ->with('i',(request()->input('page',1)-1)*10);
+        $clientes = Cliente::latest()->paginate(10);
+        return view('clientes.index', compact('clientes'))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**
@@ -31,24 +31,22 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nome'=>'required|string|max:255',
-            'email'=>'required|email|unique:clientes',
-            'telefone'=>'required|string|max:20',
-            'endereco'=>'required|string|max:255',
-            'nif'=>'required|string|size:9|unique:clientes',
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|unique:clientes,email',
+            'telefone' => 'required|string|max:20',
+            'endereco' => 'required|string|max:255',
+            'nif' => 'required|string|size:9|unique:clientes,nif',
         ]);
 
-        Cliente::create($request->all());// O método create é usado para criar um novo cliente com os dados validados do formulário. Ele utiliza o recurso de preenchimento em massa (mass assignment) do Laravel, que permite criar um novo registro no banco de dados usando um array associativo dos campos e seus valores correspondentes. O método all() do objeto Request retorna todos os dados do formulário, que são então passados para o método create para serem inseridos na tabela de clientes.
+        Cliente::create($request->all());
 
         return redirect()->route('clientes.index')
-                        ->with('success','Cliente criado com sucesso.');
+                        ->with('success', 'Cliente criado com sucesso.');
     }
 
     /**
      * Display the specified resource.
      */
-
-
     public function show(string $id)
     {
         $cliente = Cliente::findOrFail($id);
@@ -69,19 +67,29 @@ class ClienteController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $cliente = Cliente::findOrFail($id);
+
+        // CORREÇÃO: Validação alinhada com as colunas reais da BD (evitando duplicados exceto o próprio id)
         $request->validate([
-            'nome'=>'required|string|max:255',
-            'email'=>'required|email|unique:clientes,email,'.$id,
-            'telefone'=>'required|string|max:20',
-            'endereco'=>'required|string|max:255',
-            'nif'=>'required|string|size:9|unique:clientes,nif,'.$id,
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:clientes,email,' . $id,
+            'telemovel' => 'required|string|max:20',
+            'nif' => 'required|string|size:9|unique:clientes,nif,' . $id,
         ]);
 
-        $cliente = Cliente::findOrFail($id);
-        $cliente->update($request->all());
+        // 1. Recolher os dados base que combinam com as colunas do banco
+        $dados = $request->only(['nome', 'email', 'nif']);
 
-        return redirect()->route('cliente.index')
-                        ->with('success','Cliente atualizado com sucesso.');
+        // 2. CORREÇÃO DE MAPEAMENTO: Mapeia o input 'telemovel' do HTML para a coluna 'telefone' do MySQL
+        $dados['telefone'] = $request->telemovel;
+
+        // 3. Forçar a preservação do endereço atual (ou pode adicionar o campo no form de edição mais tarde)
+        $dados['endereco'] = $cliente->endereco ?? 'N/D';
+
+        // 4. Gravação segura sem quebras de MassAssignment
+        $cliente->update($dados);
+
+        return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso!');
     }
 
     /**
@@ -89,13 +97,10 @@ class ClienteController extends Controller
      */
     public function destroy(string $id)
     {
-        $cliente = Cliente::findOrFail($id);// O método findOrFail é usado para encontrar o cliente pelo ID. Se o cliente não for encontrado, ele lançará uma exceção e retornará uma resposta de erro 404.
-
+        $cliente = Cliente::findOrFail($id);
         $cliente->delete();
 
         return redirect()->route('clientes.index')
-                        ->with('success','Cliente eliminado com sucesso.');
+                        ->with('success', 'Cliente eliminado com sucesso.');
     }
 }
-
-
