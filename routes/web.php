@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ViaturaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\VendaController;
+use App\Http\Controllers\DashboardController;
 
 // Redireciona a página inicial diretamente para as viaturas
 Route::redirect('/', '/viaturas');
@@ -15,10 +16,9 @@ Route::resource('clientes', ClienteController::class);
 Route::resource('vendas', VendaController::class);
 
 // Se o Breeze criou uma rota de dashboard, pode deixá-la aqui em baixo isolada
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+       Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 });
 
 require __DIR__.'/auth.php';

@@ -11,13 +11,29 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="{{ route('dashboard') }}">
       <i class="bi bi-car-front"></i> Stand Viaturas
     </a>
     <div class="navbar-nav">
+      <a class="nav-link" href="{{ route('dashboard') }}">Painel</a>
       <a class="nav-link" href="{{ route('clientes.index') }}">Clientes</a>
       <a class="nav-link" href="{{ route('viaturas.index') }}">Viaturas</a>
       <a class="nav-link" href="{{ route('vendas.index') }}">Vendas</a>
+    </div>
+
+    <div class="navbar-nav ms-auto">
+      @auth
+        <span class="nav-link text-light">
+          <i class="bi bi-person-circle"></i> {{ auth()->user()->name }}
+        </span>
+        <form action="{{ route('logout') }}" method="POST" class="d-flex">
+          @csrf
+          <button type="submit" class="btn btn-sm btn-outline-light ms-2">Sair</button>
+        </form>
+      @else
+        <a class="nav-link" href="{{ route('login') }}">Entrar</a>
+        <a class="nav-link" href="{{ route('register') }}">Registar</a>
+      @endauth
     </div>
   </div>
 </nav>
@@ -25,7 +41,6 @@
 <div class="container mt-4">
 
     {{-- Mensagens de sucesso/erro --}}
-    {{-- //As mensagens flash (session('success')) aparecem automaticamente após cada operação CRUD. --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show">
             <i class="bi bi-check-circle"></i> {{ session('success') }}
