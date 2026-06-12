@@ -19,7 +19,7 @@ class ViaturaFactory extends Factory
     {
 
     $marcas = ['Renault', 'Peugeot', 'BMW', 'Mercedes', 'Volkswagen', 'Fiat', 'Opel'];
-    $estados = ['Disponível', 'Reservado', 'Vendido'];
+    $estados = ['Disponível', 'Vendido'];
 
     return [
         'marca' => $this->faker->randomElement($marcas),
