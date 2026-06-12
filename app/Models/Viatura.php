@@ -7,16 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Viatura extends Model
 {
-    use HasFactory;
-
+    use HasFactory; // Adicionar esta linha
     protected $table = 'viaturas';
 
     protected $fillable = [
         'marca', 'modelo', 'matricula', 'ano', 'quilometros', 'preco', 'foto', 'estado'
     ];
 
-    public function venda()
+    public function vendas()
     {
-        return $this->hasOne(Venda::class);
+        return $this->hasMany(Venda::class); // Relacionamento com a tabela de vendas
     }
 }

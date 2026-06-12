@@ -13,8 +13,6 @@ class ViaturaController extends Controller
      */
     public function index(Request $request)
     {
-
-
         $query = Viatura::query();
 
         // Pesquisa por Marca, Modelo ou Matrícula

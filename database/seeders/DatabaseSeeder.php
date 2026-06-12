@@ -18,15 +18,13 @@ class DatabaseSeeder extends Seeder
         // ===================== VIATURAS =====================
         // Cria 15 viaturas disponíveis
         $viaturasDisponiveis = Viatura::factory()
-            ->count(25)
+            ->count(15)
             ->state(['estado' => 'Disponível'])
             ->create();
 
-            
-
         // Cria 5 viaturas já vendidas
         $viaturasVendidas = Viatura::factory()
-            ->count(25)
+            ->count(5)
             ->state(['estado' => 'Vendido'])
             ->create();
 

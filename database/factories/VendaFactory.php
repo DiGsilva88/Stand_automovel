@@ -24,7 +24,7 @@ class VendaFactory extends Factory
             'cliente_id' => Cliente::factory(),
             'viatura_id' => Viatura::factory(),
             'data_venda' => $this->faker->date(),
-            'valor_venda' => $this->faker->numberBetween(5000, 60000),
+            'valor_venda' => $this->faker->randomFloat(2, 5000, 60000),
             'observacoes' => $this->faker->sentence(),
         ];
     }
