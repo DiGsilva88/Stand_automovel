@@ -50,13 +50,13 @@
             <td>{{ $viatura->ano }}</td>
             <td>{{ number_format($viatura->preco, 2, ',', '.') }} €</td>
             <td>
-                <span class="badge {{ $viatura->estado === 'disponivel' ? 'bg-success' : 'bg-danger' }}">
-                    {{ ucfirst($viatura->estado) }}
+                <span class="badge {{ $viatura->estado === 'Disponível' ? 'bg-success' : 'bg-danger' }}">
+                    {{ $viatura->estado }}
                 </span>
             </td>
             <td>
                 @if($viatura->foto)
-                    <img src="{{ asset('storage/' . $viatura->foto) }}"
+                    <img src="{{ asset($viatura->foto) }}"
                          width="60" class="rounded">
                 @else
                     <span class="text-muted">Sem foto</span>

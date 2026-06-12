@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             ->state(['estado' => 'Disponível'])
             ->create();
 
+            
+
         // Cria 5 viaturas já vendidas
         $viaturasVendidas = Viatura::factory()
             ->count(25)
