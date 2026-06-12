@@ -6,11 +6,12 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\VendaController;
 use App\Http\Controllers\DashboardController;
 
-// Redireciona a página inicial diretamente para o dashboard (requer login)
-Route::redirect('/', '/dashboard');
+// MOSTRAR A NOVA PÁGINA INICIAL MINIMALISTA DO STAND
+Route::get('/', function () {
+    return view('welcome');
+});
 
 // Rotas públicas (LIVRES DE LOGIN) para testar o CRUD à vontade
-
 Route::resource('viaturas', ViaturaController::class);
 Route::resource('clientes', ClienteController::class);
 Route::resource('vendas', VendaController::class);
