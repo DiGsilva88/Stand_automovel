@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SS Automóveis — Painel Principal</title>
-<link href="https://googleapis.com" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --black: #0a0a0a;
@@ -42,6 +42,7 @@
     display: flex; align-items: center; justify-content: space-between;
     height: 64px;
     width: 100vw;
+    flex-wrap: wrap;
   }
   .custom-navbar a { text-decoration: none; }
   .nav-logo-box { display: flex; align-items: center; gap: 8px; }
@@ -54,26 +55,27 @@
     text-transform: uppercase; letter-spacing: 2px; font-size: 11px;
     color: var(--accent); font-weight: 400;
   }
-  .nav-links-box { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; align-items: center; }
+  .nav-links-box { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; align-items: center; flex-wrap: wrap; }
   .nav-links-box a {
     color: var(--muted); font-size: 13px; font-weight: 500;
     letter-spacing: 0.3px; transition: color .2s;
   }
   .nav-links-box a:hover, .nav-links-box a.active { color: var(--white); }
   .nav-user { color: var(--white); font-size: 13px; font-weight: 500; }
-/* ANTES: max-width: 1200px; */
 
-.container {
-    max-width: 95%; /* Ocupa 95% do ecrã, ideal para painéis de dados */
+  .container {
+    max-width: 95%;
     margin: 0 auto;
-    padding: 40px 0; /* Menos margem vertical, mais foco nos dados */
-}
+    padding: 40px 0;
+  }
 
   /* ── SECTION HEADER ── */
   .section-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
     margin-bottom: 40px;
   }
   .section-title {
@@ -158,6 +160,14 @@
     font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
   }
   .status-badge.success { background: rgba(46,204,113,0.12); color: var(--success); }
+
+  /* Responsivo */
+  @media (max-width: 768px) {
+    .custom-navbar { height: auto; padding: 12px 20px; gap: 12px; }
+    .nav-links-box { gap: 16px; }
+    .section-title { font-size: 28px; }
+    .container { max-width: 100%; padding: 20px 16px; }
+  }
 </style>
 </head>
 <body>
@@ -178,7 +188,7 @@
     </ul>
 
     <div class="nav-user">
-      {{ Auth::user()->name ?? 'Diana Silva' }}
+      {{ Auth::check() ? Auth::user()->name : 'Diana Silva' }}
     </div>
   </header>
 
@@ -193,14 +203,14 @@
       <a href="{{ route('vendas.create') }}" class="btn-action-gold">+ Registar Venda</a>
     </div>
 
-    <!-- MÉTRICAS SOLICITADAS (Grelha de Indicadores) -->
+    <!-- MÉTRICAS -->
     <div class="stats-bar">
 
       <!-- Número de Vendas -->
       <div class="stat-cell">
         <div class="stat-icon gold">📊</div>
         <div>
-          <div class="stat-num">{{ $totalVendas ?? '24' }}</div>
+          <div class="stat-num">{{ $totalVendas ?? 0 }}</div>
           <div class="stat-lbl">Vendas Efetuadas</div>
         </div>
       </div>
@@ -209,7 +219,7 @@
       <div class="stat-cell">
         <div class="stat-icon green">€</div>
         <div>
-          <div class="stat-num">{{ isset($totalFaturado) ? number_format($totalFaturado, 0, ',', '.') . ' €' : '842.500 €' }}</div>
+          <div class="stat-num">{{ number_format($valorTotalVendas ?? 0, 0, ',', '.') }} €</div>
           <div class="stat-lbl">Total Faturado</div>
         </div>
       </div>
@@ -218,7 +228,7 @@
       <div class="stat-cell">
         <div class="stat-icon blue">🚗</div>
         <div>
-          <div class="stat-num">{{ $totalViaturas ?? '18' }}</div>
+          <div class="stat-num">{{ $totalDisponiveis ?? 0 }}</div>
           <div class="stat-lbl">Stock Disponível</div>
         </div>
       </div>
@@ -227,14 +237,14 @@
       <div class="stat-cell">
         <div class="stat-icon purple">👥</div>
         <div>
-          <div class="stat-num">{{ $totalClientes ?? '56' }}</div>
+          <div class="stat-num">{{ $totalClientes ?? 0 }}</div>
           <div class="stat-lbl">Clientes Registados</div>
         </div>
       </div>
 
     </div>
 
-    <!-- RESUMO DAS ÚLTIMAS TRANSAÇÕES DINÂMICAS -->
+    <!-- ATIVIDADE RECENTE -->
     <div class="data-section">
       <h2 class="table-title">Atividade Recente</h2>
       <div class="table-responsive">
@@ -251,15 +261,11 @@
             @if(isset($ultimasVendas) && $ultimasVendas->count() > 0)
               @foreach($ultimasVendas as $venda)
                 <tr>
-                  <!-- Nome/Modelo da Viatura -->
                   <td style="font-weight: 600;">
                     {{ $venda->viatura->marca ?? 'Viatura' }} {{ $venda->viatura->modelo ?? '' }}
                   </td>
-                  <!-- Nome do Cliente -->
                   <td>{{ $venda->cliente->nome ?? 'Cliente Geral' }}</td>
-                  <!-- Data Formatada -->
-                  <td>{{ $venda->created_at ? $venda->created_at->format('d/m/Y') : 'N/D' }}</td>
-                  <!-- Preço com Destaque Dourado -->
+                  <td>{{ \Carbon\Carbon::parse($venda->data_venda)->format('d/m/Y') }}</td>
                   <td style="color: var(--accent); font-weight: 600;">
                     {{ number_format($venda->valor_venda ?? 0, 0, ',', '.') }} €
                   </td>
@@ -267,7 +273,7 @@
               @endforeach
             @else
               <tr>
-                <td colspan="4" class="text-center text-muted" style="padding: 24px;">
+                <td colspan="4" style="text-align: center; color: var(--muted); padding: 24px;">
                   Nenhuma venda registada até ao momento.
                 </td>
               </tr>
@@ -277,9 +283,7 @@
       </div>
     </div>
 
-  </div> <!-- Fim do container principal -->
+  </div>
 
 </body>
 </html>
-
-
