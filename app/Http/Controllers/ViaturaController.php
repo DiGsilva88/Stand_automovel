@@ -15,7 +15,7 @@ class ViaturaController extends Controller
     {
         $query = Viatura::query();
 
-        // Pesquisa por Marca, Modelo ou Matrícula
+        // 1. Pesquisa por Marca, Modelo ou Matrícula
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -25,17 +25,17 @@ class ViaturaController extends Controller
             });
         }
 
-        // Ordenação Dinâmica
+        // 2. Ordenação Dinâmica
         $ordenar = $request->get('ordenar', 'id');
-        $direcao = $request->get('direcao', 'asc');
+        $direcao = $request->get('direcao', 'desc'); // Alterado para 'desc' para mostrar os mais recentes primeiro por padrão
         $colunasPermitidas = ['id', 'marca', 'modelo', 'ano', 'preco'];
 
         if (in_array($ordenar, $colunasPermitidas)) {
             $query->orderBy($ordenar, $direcao);
         }
 
-        // Paginação mantendo os parâmetros da URL
-        $viaturas = $query->paginate(10)->appends($request->query());
+        // 3. Paginação mantendo os parâmetros da URL (Como o termo de pesquisa)
+        $viaturas = $query->paginate(12)->appends($request->query()); // Aumentado para 12 para grelhas de 3 colunas em Tailwind
 
         return view('viaturas.index', compact('viaturas'));
     }
@@ -60,11 +60,14 @@ class ViaturaController extends Controller
             'ano' => 'required|integer|min:1900|max:' . date('Y'),
             'quilometros' => 'required|integer|min:0',
             'preco' => 'required|numeric|min:0',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'estado' => 'required|string|max:255',
         ]);
 
         $dados = $request->except('foto');
+
+        // Tratar preço (garante ponto decimal caso venha com vírgula)
+        $dados['preco'] = str_replace(',', '.', $request->preco);
 
         // Upload da Imagem para a pasta public/fotos
         if ($request->hasFile('foto')) {
@@ -119,9 +122,9 @@ class ViaturaController extends Controller
         $dados = $request->only(['marca', 'modelo', 'ano', 'quilometros', 'estado']);
         $dados['preco'] = $precoFormatado;
 
-        // 4. Tratar o Upload da Nova Foto (se o utilizador escolher uma)
+        // 4. Tratar o Upload da Nova Foto
         if ($request->hasFile('foto')) {
-            // Remover a foto antiga da pasta se ela existir para não acumular lixo
+            // Remover a foto antiga se ela existir para não acumular lixo
             if ($viatura->foto && File::exists(public_path($viatura->foto))) {
                 File::delete(public_path($viatura->foto));
             }
@@ -137,8 +140,9 @@ class ViaturaController extends Controller
         // 5. Atualizar na Base de Dados
         $viatura->update($dados);
 
-        return redirect()->route('viaturas.index')->with('success', 'Viatura atualizada com sucesso!');
+        return redirect()->route('viaturas.index')->with('success', 'Viatura updated com sucesso!');
     }
+
     /**
      * Remover uma viatura e o seu respetivo ficheiro de imagem.
      */

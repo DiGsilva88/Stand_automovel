@@ -34,11 +34,11 @@ class ClienteController extends Controller
             'nome' => 'required|string|max:255',
             'email' => 'required|email|unique:clientes,email',
             'telefone' => 'required|string|max:20',
-            'endereco' => 'required|string|max:255',
+            'morada' => 'required|string|max:255',
             'nif' => 'required|string|size:9|unique:clientes,nif',
         ]);
 
-        Cliente::create($request->all());
+        Cliente::create($request->only(['nome', 'email', 'telefone', 'morada', 'nif']));
 
         return redirect()->route('clientes.index')
                         ->with('success', 'Cliente criado com sucesso.');
@@ -49,7 +49,7 @@ class ClienteController extends Controller
      */
     public function show(string $id)
     {
-        $cliente = Cliente::findOrFail($id);
+        $cliente = Cliente::with('vendas.viatura')->findOrFail($id);
         return view('clientes.show', compact('cliente'));
     }
 
@@ -69,25 +69,17 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::findOrFail($id);
 
-        // CORREÇÃO: Validação alinhada com as colunas reais da BD (evitando duplicados exceto o próprio id)
+        // CORREÇÃO: Validação alinhada com as colunas reais da BD (telefone, morada),
+        // evitando duplicados exceto o próprio id
         $request->validate([
             'nome' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:clientes,email,' . $id,
-            'telemovel' => 'required|string|max:20',
+            'telefone' => 'required|string|max:20',
+            'morada' => 'required|string|max:255',
             'nif' => 'required|string|size:9|unique:clientes,nif,' . $id,
         ]);
 
-        // 1. Recolher os dados base que combinam com as colunas do banco
-        $dados = $request->only(['nome', 'email', 'nif']);
-
-        // 2. CORREÇÃO DE MAPEAMENTO: Mapeia o input 'telemovel' do HTML para a coluna 'telefone' do MySQL
-        $dados['telefone'] = $request->telemovel;
-
-        // 3. Forçar a preservação do endereço atual (ou pode adicionar o campo no form de edição mais tarde)
-        $dados['endereco'] = $cliente->endereco ?? 'N/D';
-
-        // 4. Gravação segura sem quebras de MassAssignment
-        $cliente->update($dados);
+        $cliente->update($request->only(['nome', 'email', 'telefone', 'morada', 'nif']));
 
         return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso!');
     }

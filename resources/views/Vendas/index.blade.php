@@ -1,171 +1,90 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SS Automóveis — Historial de Vendas</title>
-<link href="https://googleapis.com" rel="stylesheet">
-<style>
-  :root {
-    --black: #0a0a0a;
-    --dark: #111111;
-    --card: #161616;
-    --border: #222222;
-    --accent: #c8a84b;
-    --accent-dim: rgba(200,168,75,0.12);
-    --white: #f5f5f5;
-    --muted: #888888;
-    --success: #2ecc71;
-    --font-display: 'Barlow Condensed', sans-serif;
-    --font-body: 'Inter', sans-serif;
-  }
+@extends('layouts.app')
+@section('title', 'Vendas — SS Motors')
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+@section('content')
 
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* ── NAVBAR MINIMALISTA UNIFORMIZADA ── */
-  .custom-navbar {
-    position: sticky; top: 0; z-index: 1000;
-    background: rgba(10,10,10,0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 40px;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 64px; width: 100vw;
-  }
-  .custom-navbar a { text-decoration: none; }
-  .nav-logo-box { display: flex; align-items: center; gap: 8px; }
-  .nav-logo-ss { font-family: var(--font-body); font-weight: 800; font-size: 20px; letter-spacing: 2px; color: var(--white); }
-  .nav-logo-pipe { color: #374151; font-weight: 100; font-size: 18px; }
-  .nav-logo-sub { text-transform: uppercase; letter-spacing: 2px; font-size: 11px; color: var(--accent); font-weight: 400; }
-  .nav-links-box { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; align-items: center; }
-  .nav-links-box a { color: var(--muted); font-size: 13px; font-weight: 500; letter-spacing: 0.3px; transition: color .2s; }
-  .nav-links-box a:hover, .nav-links-box a.active { color: var(--white); }
-  .nav-user { color: var(--white); font-size: 13px; font-weight: 500; }
-
-  .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
-
-  /* ── SECTION HEADER ── */
-  .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
-  .section-title { font-family: var(--font-display); font-size: 42px; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; line-height: 1; }
-  .section-eyebrow { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-
-  .btn-action-gold {
-    background: var(--accent); color: var(--black); padding: 10px 24px; border-radius: 30px;
-    font-size: 12px; font-weight: 700; text-decoration: none; letter-spacing: 0.5px; transition: opacity .2s; text-transform: uppercase;
-  }
-  .btn-action-gold:hover { opacity: 0.85; }
-
-  /* ── TABELA DE VENDAS ── */
-  .data-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 30px; }
-  .table-responsive { overflow-x: auto; }
-  .table-premium { width: 100%; border-collapse: collapse; text-align: left; }
-  .table-premium th { color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-size: 11px; font-weight: 600; padding: 14px 16px; border-bottom: 1px solid var(--border); }
-  .table-premium td { padding: 16px; border-bottom: 1px solid rgba(34,34,34,0.5); font-size: 13px; color: #e5e5e5; }
-  .table-premium tr:last-child td { border-bottom: none; }
-
-  .item-title { font-weight: 600; color: var(--white); }
-  .item-accent { color: var(--accent); font-weight: 700; font-size: 14px; }
-
-  .status-badge {
-    display: inline-block; padding: 4px 12px; border-radius: 20px;
-    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .status-badge.success { background: rgba(46,204,113,0.12); color: var(--success); }
-
-  .btn-table-round {
-    display: inline-block; padding: 6px 16px; border-radius: 30px; border: 1px solid var(--border);
-    color: var(--white); text-decoration: none; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s;
-  }
-  .btn-table-round:hover { border-color: var(--white); background: var(--white); color: var(--black); }
-</style>
-</head>
-<body>
-
-  <!-- NAVBAR INTERLIGADA -->
-  <header class="custom-navbar">
-    <div class="nav-logo-box">
-      <span class="nav-logo-ss">SS</span>
-      <span class="nav-logo-pipe">|</span>
-      <span class="nav-logo-sub">Automóveis</span>
+<!-- Cabeçalho da Página Estilo Aether -->
+<header class="mb-12 flex justify-between items-end flex-wrap gap-4 pb-6 border-b border-gray-100">
+    <div>
+        <span class="text-xs font-bold tracking-widest text-blue-600 uppercase block mb-1">Painel Comercial</span>
+        <h1 class="text-4xl font-extrabold text-black uppercase tracking-tighter font-sora">Vendas</h1>
+        <p class="text-sm text-gray-500 mt-1">Histórico de transações e contratos digitais do stand.</p>
     </div>
-    <ul class="nav-links-box">
-      <li><a href="{{ route('dashboard') }}">Painel</a></li>
-      <li><a href="{{ route('viaturas.index') }}">Viaturas</a></li>
-      <li><a href="{{ route('clientes.index') }}">Clientes</a></li>
-      <li><a href="{{ route('vendas.index') }}" class="active">Vendas</a></li>
-    </ul>
-    <div class="nav-user">{{ Auth::user()->name ?? 'Diana Silva' }}</div>
-  </header>
+    <a href="{{ route('vendas.create') }}"
+       class="px-6 py-3 bg-brand-blue text-white text-xs font-bold uppercase tracking-wider rounded-lg hover:opacity-90 transition inline-flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">add</span> Nova Venda
+    </a>
+</header>
 
-  <div class="container">
-
-    <!-- CABEÇALHO DA SECÇÃO -->
-    <div class="section-header">
-      <div>
-        <div class="section-eyebrow">Transações Registadas</div>
-        <h1 class="section-title">Historial de Vendas</h1>
-      </div>
-      <a href="{{ route('vendas.create') }}" class="btn-action-gold">+ Registar Venda</a>
-    </div>
-
-    <!-- BLOCO DA TABELA -->
-    <div class="data-section">
-      <div class="table-responsive">
-        <table class="table-premium">
-          <thead>
-            <tr>
-              <th>ID Venda</th>
-              <th>Viatura Transacionada</th>
-              <th>Cliente Adquirente</th>
-              <th>Data da Venda</th>
-              <th>Valor do Negócio</th>
-              <th>Estado</th>
-              <th style="text-align: right;">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            @if(isset($vendas) && $vendas->count() > 0)
-              @foreach($vendas as $venda)
-                <tr>
-                  <td style="color: var(--muted);">#{{ $venda->id }}</td>
-                  <td>
-                    <span class="item-title">
-                      {{ $venda->viatura->marca ?? 'Viatura' }} {{ $venda->viatura->modelo ?? '' }}
-                    </span>
-                    <span style="display: block; font-size: 11px; color: var(--muted);">Ano: {{ $venda->viatura->ano ?? 'N/D' }}</span>
-                  </td>
-                  <td>{{ $venda->cliente->nome ?? 'Cliente Geral' }}</td>
-                  <td>{{ $venda->created_at ? $venda->created_at->format('d/m/Y') : 'N/D' }}</td>
-                  <td><span class="item-accent">{{ number_format($venda->valor_venda ?? 0, 0, ',', '.') }} €</span></td>
-                  <td><span class="status-badge success">Concluída</span></td>
-                  <td style="text-align: right;">
-                    <a href="{{ route('vendas.show', $venda->id) }}" class="btn-table-round">Detalhes</a>
-                  </td>
+<!-- Tabela Minimalista Premium de Alto Contraste -->
+<div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-gray-100 bg-gray-50/50">
+                    <th class="p-5 text-xs font-bold uppercase tracking-wider text-gray-400 font-mono w-16">#</th>
+                    <th class="p-5 text-xs font-bold uppercase tracking-wider text-gray-400 font-sora">Viatura</th>
+                    <th class="p-5 text-xs font-bold uppercase tracking-wider text-gray-400 font-sora hidden md:table-cell">Cliente</th>
+                    <th class="p-5 text-xs font-bold uppercase tracking-wider text-gray-400 font-mono hidden lg:table-cell">Data</th>
+                    <th class="p-5 text-xs font-bold uppercase tracking-wider text-gray-400 font-sora text-right">Valor Comercial</th>
+                    <th class="p-5 w-40"></th>
                 </tr>
-              @endforeach
-            @else
-              <tr>
-                <td colspan="7" class="text-center" style="color: var(--muted); padding: 30px 0;">
-                  Nenhum registo de venda localizado no sistema.
-                </td>
-              </tr>
-            @endif
-          </tbody>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                @forelse($vendas as $venda)
+                <tr class="hover:bg-gray-50/50 transition duration-150 group">
+                    <!-- ID Comercial -->
+                    <td class="p-5 font-mono text-xs text-gray-400">
+                        {{ str_pad($venda->id, 4, '0', STR_PAD_LEFT) }}
+                    </td>
+
+                    <!-- Nome da Viatura -->
+                    <td class="p-5 font-sora text-sm font-bold text-gray-900 uppercase tracking-tight">
+                        {{ $venda->viatura->marca ?? 'N/D' }}
+                        <span class="text-gray-400 font-normal">{{ $venda->viatura->modelo ?? '' }}</span>
+                    </td>
+
+                    <!-- Nome do Cliente -->
+                    <td class="p-5 text-sm text-gray-600 hidden md:table-cell">
+                        {{ $venda->cliente->nome ?? 'N/D' }}
+                    </td>
+
+                    <!-- Data Formatada -->
+                    <td class="p-5 text-xs font-mono text-gray-500 hidden lg:table-cell">
+                        {{ \Carbon\Carbon::parse($venda->data_venda)->format('d.m.Y') }}
+                    </td>
+
+                    <!-- Valor Total em Azul Elétrico -->
+                    <td class="p-5 text-right font-sora font-extrabold text-blue-600 text-sm tracking-tight">
+                        {{ number_format($venda->valor_total, 0, ',', '.') }} €
+                    </td>
+
+                    <!-- Ações Laterais Limpas -->
+                    <td class="p-5">
+                        <div class="flex justify-end gap-4 text-xs font-bold uppercase tracking-wider">
+                            <a href="{{ route('vendas.show', $venda->id) }}"
+                               class="text-gray-400 hover:text-black transition flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">visibility</span> Ver
+                            </a>
+                            <a href="{{ route('vendas.edit', $venda->id) }}"
+                               class="text-blue-600 hover:text-blue-800 transition flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">edit</span> Editar
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <!-- Fallback Sem Registos -->
+                <tr>
+                    <td colspan="6" class="p-20 text-center text-gray-400">
+                        <span class="material-symbols-outlined text-4xl block mb-3 text-gray-200">receipt_long</span>
+                        <p class="text-xs font-bold uppercase tracking-widest font-mono">Nenhuma transação comercial registada.</p>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
         </table>
-      </div>
     </div>
+</div>
 
-  </div>
-
-</body>
-</html>
+@endsection

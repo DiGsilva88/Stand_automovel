@@ -1,241 +1,167 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SS Automóveis — Catálogo de Viaturas</title>
-<link href="https://googleapis.com" rel="stylesheet">
-<style>
-  :root {
-    --black: #0a0a0a;
-    --dark: #111111;
-    --card: #161616;
-    --border: #222222;
-    --accent: #c8a84b;
-    --accent-dim: rgba(200,168,75,0.12);
-    --white: #f5f5f5;
-    --muted: #888888;
-    --font-display: 'Barlow Condensed', sans-serif;
-    --font-body: 'Inter', sans-serif;
-  }
+@extends('layouts.app')
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+@section('title', 'The Showroom — SS Motors')
 
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
+@section('content')
 
-  /* ── NAVBAR PREMIUM INDEPENDENTE ── */
-  .custom-navbar {
-    position: sticky; top: 0; z-index: 1000;
-    background: rgba(10,10,10,0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 40px;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 64px;
-    width: 100vw;
-  }
-  .custom-navbar a { text-decoration: none; }
-  .nav-logo-box { display: flex; align-items: center; gap: 8px; }
-  .nav-logo-ss {
-    font-family: var(--font-body); font-weight: 800; font-size: 20px;
-    letter-spacing: 2px; color: var(--white);
-  }
-  .nav-logo-pipe { color: #374151; font-weight: 100; font-size: 18px; }
-  .nav-logo-sub {
-    text-transform: uppercase; letter-spacing: 2px; font-size: 11px;
-    color: var(--accent); font-weight: 400;
-  }
-  .nav-links-box { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; align-items: center; }
-  .nav-links-box a {
-    color: var(--muted); font-size: 13px; font-weight: 500;
-    letter-spacing: 0.3px; transition: color .2s;
-  }
-  .nav-links-box a:hover, .nav-links-box a.active { color: var(--white); }
-  .nav-user { color: var(--white); font-size: 13px; font-weight: 500; }
+<!-- Cabeçalho Principal Estilo Aether Dark -->
+<div class="mb-12">
+    <span class="text-[10px] font-mono tracking-widest text-aether-blue uppercase block mb-1">AETHER CURATED FLEET</span>
+    <h1 class="font-sora text-4xl lg:text-5xl font-bold text-aether-light uppercase tracking-tighter">The Showroom</h1>
+    <p class="text-sm text-aether-gray mt-2 max-w-xl leading-relaxed">
+        Curated precision. Explore our collection of performance-engineered masterpieces, each passing a certified mechanical assessment.
+    </p>
+</div>
 
-  /* ── LAYOUT EXPANDIDO (95% DE ECRÃ) ── */
-  .container {
-    max-width: 95%;
-    margin: 0 auto;
-    padding: 60px 20px;
-  }
+<!-- Layout de Duas Colunas (Filtros + Grelha de Carros) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-  .section-header {
-    text-align: center;
-    margin-bottom: 50px;
-  }
-  .section-title {
-    font-family: var(--font-display);
-    font-size: 44px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 1px;
-    color: var(--white); margin-bottom: 12px;
-  }
-  .section-sub { color: var(--muted); font-size: 14px; letter-spacing: 0.5px; }
-
-  /* ── GRELHA DE VIATURAS ── */
-  .vehicles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 30px;
-  }
-  .vehicle-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex; flex-direction: column;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-  }
-  .vehicle-card:hover {
-    transform: translateY(-5px); border-color: var(--accent);
-  }
-  .card-media {
-    position: relative; width: 100%; height: 210px;
-    background: #1c1c1f;
-    overflow: hidden;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-  }
-  .card-media img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-  }
-  .no-image-placeholder {
-    font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #555; text-align: center;
-  }
-  .diagnostic-text {
-    font-size: 10px; color: #ef4444; font-weight: 600; margin-top: 8px; letter-spacing: 0.5px; text-align: center; padding: 0 10px;
-  }
-  .price-tag {
-    position: absolute; top: 16px; right: 16px;
-    background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: var(--white); padding: 6px 14px; border-radius: 30px;
-    font-size: 12px; font-weight: 700; z-index: 2;
-  }
-  .price-tag span { color: var(--accent); }
-
-  .card-body { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; }
-  .vehicle-name {
-    font-size: 18px; font-weight: 700; color: var(--white);
-    margin-bottom: 6px; text-decoration: none; display: block;
-  }
-  .vehicle-category {
-    font-size: 11px; color: var(--accent); text-transform: uppercase;
-    letter-spacing: 1.5px; font-weight: 600; margin-bottom: 20px;
-  }
-  .tech-specs {
-    border-top: 1px solid var(--border); padding-top: 16px;
-    display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;
-  }
-  .spec-item { display: flex; justify-content: space-between; font-size: 12px; }
-  .spec-label { color: var(--muted); }
-  .spec-value { color: var(--white); font-weight: 500; }
-
-  .card-actions { display: flex; gap: 12px; margin-top: auto; }
-  .btn-view {
-    flex: 1; text-align: center; background: transparent;
-    border: 1px solid var(--border); color: var(--white);
-    padding: 11px; font-size: 11px; font-weight: 600;
-    text-decoration: none; border-radius: 30px;
-    text-transform: uppercase; letter-spacing: 1px;
-    transition: background 0.2s, border-color 0.2s, color 0.2s;
-  }
-  .btn-view:hover { border-color: var(--white); background: var(--white); color: var(--black); }
-  .btn-edit { border-color: var(--accent-dim); color: var(--accent); }
-  .btn-edit:hover { border-color: var(--accent); background: var(--accent); color: var(--black); }
-</style>
-</head>
-<body>
-
-  <header class="custom-navbar">
-    <div class="nav-logo-box">
-      <span class="nav-logo-ss">SS</span>
-      <span class="nav-logo-pipe">|</span>
-      <span class="nav-logo-sub">Automóveis</span>
-    </div>
-
-    <ul class="nav-links-box">
-      <li><a href="{{ route('dashboard') }}">Painel</a></li>
-      <li><a href="{{ route('viaturas.index') }}" class="active">Viaturas</a></li>
-      <li><a href="{{ route('clientes.index') }}">Clientes</a></li>
-      <li><a href="{{ route('vendas.index') }}">Vendas</a></li>
-    </ul>
-
-    <div class="nav-user">
-      {{ Auth::user()->name ?? 'Diana Silva' }}
-    </div>
-  </header>
-
-  <div class="container">
-
-    <div class="section-header">
-      <h1 class="section-title">Viaturas Disponíveis</h1>
-      <p class="section-sub">Explore a nossa coleção exclusiva de veículos de alta gama</p>
-    </div>
-
-    <div class="vehicles-grid">
-      @foreach($viaturas as $viatura)
-        <div class="vehicle-card">
-
-          <!-- MEDIA BLOCK COM RASTREIO DE ERRO ATIVO -->
-                   <!-- CORREÇÃO DEFINITIVA: Remoção do prefixo duplicado -->
-          <div class="card-media">
-            <div class="price-tag">
-              Desde <span>{{ number_format($viatura->preco, 0, ',', '.') }} €</span>
-            </div>
-
-            @if(!empty($viatura->foto))
-              <!-- Removeu-se o /fotos/ manual porque a sua BD já traz a palavra fotos/carro.jpg -->
-              <img src="/{{ $viatura->foto }}" alt="Viatura" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-              <span class="no-image-placeholder" style="display:none;">Sem Imagem</span>
-            @else
-              <span class="no-image-placeholder">Sem Imagem</span>
-            @endif
-          </div>
-
-
-          <div class="card-body">
-            <span class="vehicle-name">
-              {{ $viatura->ano }} {{ $viatura->marca }}
-            </span>
-            <div class="vehicle-category">
-              {{ $viatura->modelo }} &bull; {{ number_format($viatura->quilometros, 0, ',', '.') }} km
-            </div>
-
-            <div class="tech-specs">
-              <div class="spec-item">
-                <span class="spec-label">Tipo de Caixa</span>
-                <span class="spec-value">{{ $viatura->caixa ?? 'Manual' }}</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-label">Motorização</span>
-                <span class="spec-value">{{ $viatura->motor ?? 'N/D' }}</span>
-              </div>
-              <div class="spec-item">
-                <span class="spec-label">Transmissão</span>
-                <span class="spec-value">{{ $viatura->combustivel ?? 'Gasóleo' }}</span>
-              </div>
-            </div>
-
-            <div class="card-actions">
-              <a href="{{ route('viaturas.show', $viatura->id) }}" class="btn-view">Visualizar</a>
-              <a href="{{ route('viaturas.edit', $viatura->id) }}" class="btn-view btn-edit">Editar</a>
-            </div>
-          </div>
-
+    <!-- Barra Lateral de Filtros (Estilo Glass Card) -->
+    <aside class="lg:col-span-3 glass-card p-6 space-y-6 sticky top-32">
+        <div class="flex items-center justify-between pb-4 border-b border-white/5">
+            <h3 class="font-mono text-xs uppercase tracking-widest text-aether-blue flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">tune</span> FILTERS
+            </h3>
+            <a href="{{ route('viaturas.index') }}" class="text-[10px] text-aether-gray hover:text-white underline uppercase font-mono">Reset</a>
         </div>
-      @endforeach
+
+        <form action="{{ route('viaturas.index') }}" method="GET" class="space-y-6">
+            <!-- Categorias -->
+            <div>
+                <label class="block font-mono text-xs uppercase text-aether-gray mb-3">CATEGORY</label>
+                <div class="space-y-3">
+                    @foreach(['SUV', 'Sedan', 'Coupe'] as $cat)
+                    <label class="flex items-center gap-3 cursor-pointer text-sm text-aether-gray hover:text-white transition-colors">
+                        <input type="checkbox" name="categories[]" value="{{ $cat }}"
+                            {{ in_array($cat, request('categories', [])) ? 'checked' : '' }}
+                            class="w-4 h-4 rounded-sm border-white/20 bg-transparent text-aether-blue focus:ring-0 focus:ring-offset-0">
+                        <span>{{ $cat }}</span>
+                    </label>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Seleção de Marcas -->
+            <div>
+                <label class="block font-mono text-xs uppercase text-aether-gray mb-3">BRAND</label>
+                <select name="brand" class="w-full bg-[#201f1f] border border-white/10 text-white p-2.5 text-xs font-mono outline-none tracking-wider focus:border-aether-blue transition-colors rounded-sm">
+                    <option value="">ALL MANUFACTURERS</option>
+                    @foreach($brands ?? ['Aether Performance', 'Zenith', 'Lumina', 'Velox'] as $b)
+                    <option value="{{ $b }}" {{ request('brand') == $b ? 'selected' : '' }}>{{ strtoupper($b) }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Slider de Preço Customizado -->
+            <div>
+                <div class="flex justify-between items-center mb-2 font-mono text-xs text-aether-gray">
+                    <span>PRICE RANGE</span>
+                    <span class="text-aether-blue font-bold">{{ number_format(request('max_price', 250000), 0, ',', '.') }} €</span>
+                </div>
+                <input type="range" name="max_price" min="40000" max="250000" step="5000"
+                       value="{{ request('max_price', 250000) }}"
+                       class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-aether-blue">
+                <div class="flex justify-between text-[10px] font-mono text-aether-gray mt-1">
+                    <span>40k€</span>
+                    <span>250k€+</span>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-aether-electric text-white font-bold uppercase tracking-widest text-xs hover:bg-aether-blue hover:text-aether-dark-blue transition-colors font-mono">
+                Apply Filters
+            </button>
+        </form>
+    </aside>
+
+    <!-- Listagem de Veículos (9 Colunas) -->
+    <section class="lg:col-span-9 space-y-6">
+
+        <!-- Barra de Status Superior Comercial -->
+        <div class="glass-card p-4 flex justify-between items-center text-xs font-mono tracking-widest text-aether-gray uppercase">
+            <p>
+                <span class="text-aether-blue font-bold">{{ $viaturas->count() }}</span> VEHICLES AVAILABLE
+            </p>
+            <div class="flex gap-2">
+                <span class="material-symbols-outlined text-sm text-aether-blue bg-white/5 p-1 rounded-sm">grid_view</span>
+            </div>
+        </div>
+
+        <!-- Grelha de Produtos em Formato Glass -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            @forelse($viaturas as $viatura)
+            <div class="glass-card group overflow-hidden flex flex-col justify-between">
+
+                <!-- Contentor da Imagem Corrigido com Fallback Seguro para os dados fictícios -->
+                <!-- Procure o contentor da imagem em viaturas/index.blade.php e substitua por este: -->
+<div class="aspect-[16/10] overflow-hidden relative bg-neutral-900/50 flex items-center justify-center">
+    @php
+        // 1. Tenta usar a foto da BD se ela existir no disco
+        if (!empty($viatura->foto) && file_exists(public_path($viatura->foto))) {
+            $imagemFinal = asset($viatura->foto);
+        }
+        // 2. Se for um registo do seeder e a marca for BMW, usa a sua foto 'bmw.jpg'
+        elseif (str_contains(strtolower($viatura->marca), 'bmw')) {
+            $imagemFinal = asset('fotos/bmw.jpg');
+        }
+        // 3. Caso contrário, distribui as suas fotos 'carro2.jpg' a 'carro7.jpg' rotativamente pelos carros
+        else {
+            $numeroFoto = ($viatura->id % 6) + 2; // Gera um número entre 2 e 7 com base no ID
+            $imagemFinal = asset("fotos/carro{$numeroFoto}.jpg");
+        }
+    @endphp
+
+    <img src="{{ $imagemFinal }}"
+         alt="{{ $viatura->modelo }}"
+         class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700">
+
+    <!-- Badge de Disponibilidade Superior -->
+    <div class="absolute top-4 right-4 bg-black/85 border border-white/10 px-3 py-1 font-mono text-[9px] tracking-widest text-aether-blue uppercase rounded-sm">
+        {{ $viatura->estado ?? 'AVAILABLE' }}
     </div>
+</div>
 
-  </div>
 
-</body>
-</html>
+                <!-- Detalhes do Automóvel -->
+                <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex justify-between items-start mb-2 gap-2">
+                            <span class="font-mono text-[10px] uppercase tracking-wider text-aether-gray truncate">{{ $viatura->marca }}</span>
+                            <span class="font-mono text-sm text-aether-blue font-bold whitespace-nowrap">{{ number_format($viatura->preco, 0, ',', '.') }} €</span>
+                        </div>
+                        <h3 class="font-sora text-base font-bold text-white uppercase tracking-tight truncate leading-tight">
+                            {{ $viatura->modelo }}
+                        </h3>
+                    </div>
+
+                    <!-- Ficha Técnica Rápida Unificada (Ícones isolados em tags independentes) -->
+                    <div class="flex flex-wrap gap-4 border-t border-b border-white/5 py-3 text-xs font-mono text-aether-gray uppercase tracking-wider">
+                        <span class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm text-white/30" style="font-size: 16px;">speed</span>
+                            {{ number_format($viatura->quilometros, 0, ',', '.') }} KM
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm text-white/30" style="font-size: 16px;">Tipo de combustivel</span>
+                            {{ $viatura->combustivel ?? 'Gasolina' }}
+                        </span>
+                    </div>
+
+                    <!-- Rodapé do Cartão com Ícone Corrigido -->
+                    <div class="flex justify-between items-center pt-1 font-mono text-[11px] tracking-wider">
+                        <span class="text-white/40">{{ $viatura->ano ?? '2026' }} MODEL</span>
+                        <a href="{{ route('viaturas.show', $viatura->id) }}" class="block text-center w-auto text-xs uppercase tracking-widest text-white hover:text-aether-blue transition-colors flex items-center gap-1">
+                            VIEW DETAILS <span class="material-symbols-outlined text-xs text-white group-hover:text-aether-blue" style="font-size: 14px;">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-span-full border border-dashed border-white/10 p-16 text-center text-aether-gray font-mono text-xs uppercase tracking-widest rounded-lg">
+                <span class="material-symbols-outlined text-4xl text-white/10 block mb-3">directions_car</span>
+                No vehicles matching your current selection.
+            </div>
+            @endforelse
+        </div>
+    </section>
+</div>
+
+@endsection
