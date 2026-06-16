@@ -1,96 +1,70 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SS Automóveis — Performance & Elegância</title>
+@extends('layouts.app')
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+@section('title', 'SS MOTORS — Distinção Absoluta')
 
-    <!-- Styles / Scripts (Tailwind do Laravel) -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-[#0b0b0b] text-white antialiased selection:bg-indigo-500 selection:text-white overflow-x-hidden" style="font-family: 'Sora', sans-serif;">
+@section('content')
 
-    <!-- Navbar Superior -->
-    <nav class="w-full max-w-7xl mx-auto px-6 py-6 flex justify-between items-center bg-transparent relative z-10">
-        <!-- Logótipo -->
-        <a href="{{ route('home') }}" class="text-xl font-bold tracking-wider font-mono text-white hover:opacity-80 transition-opacity">
-            SS AUTOMÓVEIS
-        </a>
+<!-- Removemos os paddings extras do contentor principal nesta página para o vídeo ocupar o ecrã total -->
+<style>
+    main { max-width: 100% !important; padding: 0 !important; }
+</style>
 
-        <!-- Links de Navegação Centro -->
-        <div class="hidden md:flex items-center gap-8 text-[11px] font-mono tracking-widest text-gray-400 uppercase">
-            <a href="{{ route('viaturas.index') }}" class="hover:text-white transition-colors">SHOWROOM</a>
-            <a href="#" class="hover:text-white transition-colors">Contactos</a>
-            <a href="{{ route('visitas.create') }}" class="hover:text-white transition-colors text-indigo-400 font-bold">Agendar visita</a>
-        </div>
+<div class="relative min-h-[calc(100vh-80px)] -mt-12 flex flex-col justify-center items-start px-6 md:px-20 overflow-hidden">
 
-        <!-- Links Direita (Autenticação) -->
-        <div class="flex items-center gap-6 text-[11px] font-mono tracking-widest uppercase">
-            @if (Route::has('login'))
-                @auth
-                    <a href="{{ route('dashboard') }}" class="text-white border border-white/20 px-4 py-2 rounded hover:bg-white hover:text-black transition-all">
-                        Dashboard
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" class="text-gray-400 hover:text-white transition-colors">
-                        Entrar / Registar
-                    </a>
-                @endauth
-            @endif
-        </div>
-    </nav>
+    <!-- Vídeo de Fundo Premium Estabilizado (Ficheiro MP4 Direto e Leve) -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+        <video autoplay loop muted playsinline
+               class="w-full h-full object-cover opacity-35 filter grayscale brightness-75 contrast-125">
+            <source src="https://mixkit.co" type="video/mp4">
+        </video>
 
-   <!-- Secção Hero Principal -->
-    <main class="relative min-h-[calc(100vh-88px)] flex flex-col justify-center items-start max-w-7xl mx-auto px-6 py-12">
+        <!-- Máscaras de degradê para fusão cirúrgica com o fundo preto #0e0e0e -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0e0e0e] via-[#0e0e0e]/70 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-transparent to-[#0e0e0e]"></div>
+    </div>
 
-       <!-- Vídeo de Fundo Premium - LINK DIRETO TESTADO -->
-        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
-            <video autoplay loop muted playsinline
-                   class="w-full h-full object-cover opacity-45 filter grayscale brightness-90 contrast-115">
-                <source src="https://vincentschwenk.ch" type="video/mp4">
-            </video>
+    <!-- Conteúdo de Texto Alinhado à Identidade Aether (Z-Index Protegido) -->
+    <div class="relative z-10 max-w-xl space-y-6">
 
-            <!-- Máscaras de degradê para fusão perfeita com o fundo preto -->
-            <div class="absolute inset-0 bg-gradient-to-r from-[#0b0b0b] via-[#0b0b0b]/60 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/50 via-transparent to-[#0b0b0b]/40"></div>
-        </div>
-
-        <!-- Conteúdo de Texto à Esquerda -->
-        <div class="relative z-10 max-w-xl space-y-6">
-            <p class="text-[11px] font-mono tracking-[0.3em] uppercase text-indigo-400 font-medium">
+        <!-- Eyebrow Corporativo -->
+        <div class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-aether-blue rounded-full inline-block animate-pulse"></span>
+            <span class="font-mono text-[10px] font-bold tracking-[0.3em] text-aether-blue uppercase">
                 O Futuro da Performance
-            </p>
-
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white leading-none font-sans uppercase">
-                DISTINÇÃO <br> <span class="text-gray-400">ABSOLUTA.</span>
-            </h1>
-
-            <p class="text-sm md:text-base text-gray-400 leading-relaxed font-light tracking-wide">
-                Onde o prestígio automóvel encontra a distinção absoluta.
-            </p>
-
-            <!-- Botões de Ação Funcionais -->
-            <div class="flex flex-wrap gap-4 pt-4 font-mono text-[11px] tracking-widest uppercase relative z-20">
-                <a href="{{ route('viaturas.index') }}" class="bg-indigo-200 text-black font-semibold px-8 py-4 rounded hover:bg-indigo-300 transition-all text-center min-w-[160px]">
-                    Ver Viaturas
-                </a>
-                <a href="{{ route('visitas.create') }}" class="border border-white/20 text-white font-medium px-8 py-4 rounded hover:bg-white/10 transition-all text-center min-w-[160px]">
-                    Agendar Test Drive
-                </a>
-            </div>
+            </span>
         </div>
 
-        <!-- Indicador Inferior (Explore) -->
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[10px] font-mono tracking-widest text-gray-500 animate-pulse">
-            <span>Explorar</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-        </div>
+        <!-- Título Principal em Letras Garrafais Sora -->
+        <h1 class="text-5xl md:text-7xl font-bold tracking-tighter text-white leading-[1.05] font-sora uppercase">
+            DISTINÇÃO <br> <span class="text-aether-gray font-normal">ABSOLUTA.</span>
+        </h1>
 
-    </main>
-</body>
-</html>
+        <!-- Subtítulo de Suporte -->
+        <p class="text-sm md:text-base text-aether-gray leading-relaxed font-sans normal-case max-w-md">
+            Onde o prestígio automóvel encontra a distinção absoluta. Desenvolvido para entusiastas de dinâmica de condução pura.
+        </p>
+
+        <!-- Botões de Ação Funcionais Retangulares (Sem cantos redondos de estilo bootstrap) -->
+        <div class="flex flex-wrap gap-4 pt-4 font-mono text-xs uppercase tracking-widest font-bold relative z-20">
+            <a href="{{ route('viaturas.index') }}"
+               class="bg-aether-electric hover:bg-aether-blue text-white hover:text-aether-dark-blue font-semibold px-8 py-4 rounded-sm transition-all duration-300 text-center min-w-[170px] shadow-lg shadow-aether-electric/10">
+                Ver Viaturas
+            </a>
+            <a href="{{ route('visitas.create') }}"
+               class="border border-white/10 text-white font-medium px-8 py-4 rounded-sm hover:border-white hover:bg-white/5 transition-all duration-300 text-center min-w-[170px]">
+                Agendar Test Drive
+            </a>
+        </div>
+    </div>
+
+    <!-- Indicador Inferior Minimalista (Explore Scroll) -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[9px] font-mono tracking-widest text-white/20 animate-pulse">
+        <span>EXPLORE</span>
+        <svg class="w-4 h-4 text-aether-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+    </div>
+
+</div>
+
+@endsection
