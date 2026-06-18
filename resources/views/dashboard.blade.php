@@ -17,7 +17,34 @@
     }
 </style>
 
-@if($user && $user->isCliente())
+@section('content')
+
+<style>
+    .glass-card {
+        background: rgba(28, 27, 27, 0.4);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .glass-card:hover { transform: translateY(-4px); }
+    .chart-gradient {
+        background: linear-gradient(180deg, rgba(184, 195, 255, 0.1) 0%, rgba(184, 195, 255, 0) 100%);
+    }
+</style>
+
+{{-- ========================================================================== --}}
+{{-- BLOCO DE NOTIFICAÇÃO FLASH (ADICIONADO PARA RETORNAR FEEDBACK DO AGENDAMENTO) --}}
+{{-- ========================================================================== --}}
+@if(session('success'))
+    <div class="mb-8 animate-fade-in animate-duration-300">
+        <div class="bg-emerald-950/30 border border-emerald-500/20 text-emerald-400 p-4 rounded-sm flex items-center gap-3 text-xs font-mono uppercase tracking-wider backdrop-blur-md">
+            <i class="bi bi-check-circle-fill text-emerald-400 text-sm"></i>
+            <span>{{ session('success') }}</span>
+        </div>
+    </div>
+@endif
+
+@if(auth()->user() && !auth()->user()->is_admin)
     <!-- ========================================================================== -->
     <!-- 1. VISTA EXCLUSIVA DO CLIENTE (GARAGEM / FAVORITOS)                        -->
     <!-- ========================================================================== -->
@@ -289,6 +316,42 @@
                         <td colspan="5" class="px-6 py-10 text-center font-mono text-xs uppercase" style="color:#8e90a2;">
                             Nenhuma viatura registada.
                         </td>
+
+                        <td class="py-4 px-4 text-right">
+    <div class="flex items-center justify-end gap-3">
+        {{-- Emblema do Estado Atual --}}
+        <span class="px-2.5 py-1 rounded-sm text-[9px] font-mono uppercase tracking-wider
+            {{ $visita->estado === 'Pendente' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : '' }}
+            {{ $visita->estado === 'Confirmada' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : '' }}
+            {{ $visita->estado === 'Cancelada' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : '' }}">
+            {{ $visita->estado }}
+        </span>
+
+        {{-- Botões de Ação Rápidos (Apenas aparecem se o pedido estiver Pendente) --}}
+        @if($visita->estado === 'Pendente')
+            <div class="flex items-center gap-1.5 border-l border-white/10 pl-3">
+                {{-- Botão Confirmar (Aprovar) --}}
+                <form action="{{ route('admin.visitas.confirmar', $visita->id) }}" method="POST" class="inline">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="p-1 rounded-sm bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-colors" title="Confirmar Agendamento">
+                        <span class="material-symbols-outlined text-xs">check</span>
+                    </button>
+                </form>
+
+                {{-- Botão Cancelar (Recusar) --}}
+                <form action="{{ route('admin.visitas.cancelar', $visita->id) }}" method="POST" class="inline">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="p-1 rounded-sm bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition-colors" title="Cancelar Agendamento">
+                        <span class="material-symbols-outlined text-xs">close</span>
+                    </button>
+                </form>
+            </div>
+        @endif
+    </div>
+</td>
+
                     </tr>
                     @endforelse
                 </tbody>
@@ -300,45 +363,62 @@
 @endsection
 
 @push('scripts')
-@if(!($user && $user->isCliente()))
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+@if(auth()->user() && auth()->user()->is_admin)
+<script src="https://jsdelivr.net"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const ctx = document.getElementById('ssSalesChart');
-        if (ctx) {
-            new Chart(ctx.getContext('2d'), {
+        const ctx = document.getElementById('salesChart');
+        if(ctx) {
+            const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 240);
+            gradient.addColorStop(0, 'rgba(184, 195, 255, 0.15)');
+            gradient.addColorStop(1, 'rgba(184, 195, 255, 0)');
+
+            // Injeção de dados reais do Laravel convertidos em JSON
+           // Mudança: O valor padrão agora é tratado pelo PHP de forma isolada
+
+
+const labelsEconomia = @json($mesesLabels) || ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+const dadosFaturamento = @json($faturamentoMensal) ||;
+
+
+
+            new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Semana -4', 'Semana -3', 'Semana -2', 'Semana -1', 'Esta Semana'],
+                    labels: labelsEconomia,
                     datasets: [{
-                        label: 'Faturação Semanal (€)',
-                        data: @json($sales_weekly),
+                        label: 'Faturamento (€)',
+                        data: dadosFaturamento,
                         borderColor: '#b8c3ff',
-                        backgroundColor: 'rgba(184, 195, 255, 0.08)',
                         borderWidth: 2,
-                        tension: 0.35,
+                        pointBackgroundColor: '#b8c3ff',
+                        pointBorderColor: '#131313',
+                        pointHoverRadius: 6,
                         fill: true,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#2e5bff',
-                        pointBorderColor: '#b8c3ff'
+                        backgroundColor: gradient,
+                        tension: 0.3
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false }
+                    },
                     scales: {
                         y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            grid: { color: 'rgba(255,255,255,0.02)' },
                             ticks: {
-                                color: '#c4c5d9',
-                                font: { family: 'JetBrains Mono', size: 10 },
-                                callback: (value) => value.toLocaleString('pt-PT') + ' €'
+                                color: '#8e90a2',
+                                font: { family: 'JetBrains Mono', size: 9 },
+                                callback: function(value) {
+                                    return value.toLocaleString('pt-PT') + ' €';
+                                }
                             }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { color: '#c4c5d9', font: { family: 'JetBrains Mono', size: 11 } }
+                            ticks: { color: '#8e90a2', font: { family: 'JetBrains Mono', size: 10 } }
                         }
                     }
                 }
@@ -346,5 +426,6 @@
         }
     });
 </script>
+
 @endif
 @endpush

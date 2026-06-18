@@ -27,10 +27,18 @@ Route::post('/marcar-visita', [VisitaController::class, 'store'])->name('visitas
 // ==========================================
 // ÁREA INTERNA PROTEGIDA (Exige Login)
 // ==========================================
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['web', 'auth', 'verified'])->group(function () {
 
-    // Dashboard Comum (Diferencia Cliente/Admin dinamicamente no Controller)
+    // Dashboard Comum
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Área do Cliente (My Garage)
+    Route::get('/my-garage', [FavoritoController::class, 'index'])->name('garage.index');
+    Route::post('/viaturas/{viatura}/favorito', [FavoritoController::class, 'toggle'])->name('favoritos.toggle');
+
+    // Formulário de marcação protegido com sessão ativa
+    Route::get('/marcar-visita', [VisitaController::class, 'create'])->name('visitas.create');
+    
 
     // ------------------------------------------
     // ÁREA EXCLUSIVA DO CLIENTE (My Garage)

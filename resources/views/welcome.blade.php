@@ -216,7 +216,6 @@
             <div class="flex items-center gap-4">
                 <div class="w-12 h-[1px]" style="background:#b8c3ff;"></div>
                 <span class="font-mono text-[11px] uppercase tracking-widest" style="color:#c4c5d9;">
-                    FILOSOFIA SS AUTOMÓVEIS
                 </span>
             </div>
         </div>
@@ -227,7 +226,7 @@
 <section class="py-24 px-6 md:px-20 border-t" style="background:#131313; border-color: rgba(255,255,255,0.05);">
     <div class="max-w-[1440px] mx-auto space-y-10">
         <h2 class="text-center font-mono text-[11px] uppercase tracking-widest" style="color:#8e90a2;">
-            MARCAS QUE TRABALHAMOS
+
         </h2>
         <div class="flex flex-wrap justify-center items-center gap-12 md:gap-20">
 

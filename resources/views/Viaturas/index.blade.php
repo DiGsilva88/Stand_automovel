@@ -145,12 +145,14 @@
                                     <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Ano</span>
                                     <span class="text-xs font-bold text-white">{{ $viatura->ano }}</span>
                                 </div>
+
                                 <div class="flex flex-col">
-                                    <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Kms</span>
-                                    <span class="text-xs font-bold text-white truncate">
-                                        {{ number_format($viatura->kms ?? $viatura->quilometragem ?? 0, 0, ',', '.') }}
-                                    </span>
-                                </div>
+    <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Kms</span>
+    {{-- Mudança para bater certo com a base de dados: $viatura->quilometros --}}
+    <span class="text-xs font-bold text-white truncate">
+        {{ number_format($viatura->quilometros ?? 0, 0, ',', '.') }}
+    </span>
+</div>
                                 <div class="flex flex-col">
                                     <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Energia</span>
                                     <span class="text-xs font-bold text-white truncate uppercase text-[11px]">{{ $viatura->combustivel }}</span>

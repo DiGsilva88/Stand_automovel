@@ -10,10 +10,18 @@ class Viatura extends Model
 
     protected $table = 'viaturas';
 
-    protected $fillable = [
-        'marca', 'modelo', 'matricula', 'ano', 'quilometros',
-        'preco', 'foto', 'estado', 'combustivel', 'caixa', 'motor', 'descricao',
-    ];
+   protected $fillable = [
+    'marca',
+    'modelo',
+    'matricula',
+    'ano',
+    'preco',
+    'quilometros',
+    'combustivel',
+    'estado',
+    'foto'
+];
+
 
     public function vendas()
     {
