@@ -1,140 +1,118 @@
-<!doctype html>
-<html class="dark" lang="pt">
+<!DOCTYPE html>
+<html lang="pt" class="h-full bg-[#131313]">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>@yield('title', 'AETHER MOTORS')</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@yield('title', 'SS Automóveis')</title>
 
-    <!-- Google Fonts & Material Icons (Ligações Corrigidas e Consolidadas) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {{-- Correção do Vite: de app.css para app.js no segundo argumento --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- Tipografia e ícones usados pelo estilo SS Automóveis --}}
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500&display=swap" rel="stylesheet">
-    <link href="https://googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
-    <!-- Script Oficial do Tailwind CSS CDN Play -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- Mantido o suporte a ícones do Bootstrap se usados em outras páginas --}}
+    <link rel="stylesheet" href="https://jsdelivr.net">
 
-    <!-- Configuração do Tailwind para bater certo com o Showroom -->
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "aether-blue": "#b8c3ff",
-                        "aether-dark-blue": "#002388",
-                        "aether-electric": "#2e5bff",
-                        "aether-gray": "#c4c5d9",
-                        "aether-light": "#e5e2e1"
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Estilos Customizados (Glassmorphism e Scrollbar) -->
     <style>
-        body { background-color: #0e0e0e; color: #e5e2e1; -webkit-font-smoothing: antialiased; font-family: 'Hanken Grotesk', sans-serif; }
-        .font-sora { font-family: 'Sora', sans-serif; }
-        .font-mono { font-family: 'JetBrains Mono', 'Courier New', monospace; }
-
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
         }
-        .glass-nav {
-            background: rgba(19, 19, 19, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .material-symbols-outlined { display: inline-block; vertical-align: middle; }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0e0e0e; }
-        ::-webkit-scrollbar-thumb { background: #2c2b30; border-radius: 10px; }
     </style>
-
-    @stack('styles')
 </head>
-<body class="overflow-x-hidden">
+<body class="min-h-full flex flex-col font-sans antialiased text-[#e5e2e1] bg-[#131313]">
 
-    <!-- Navbar Estilo Glassmorphism Corrigida e Unificada -->
-    <nav class="fixed top-0 w-full z-50 flex justify-between items-center px-6 md:px-20 h-20 glass-nav">
+{{-- Barra de Navegação Adaptada ao Novo Modelo Escuro (Tailwind) --}}
+<nav class="bg-[#0e0e0e] border-b border-white/5 relative z-50">
+    <div class="max-w-[1440px] mx-auto px-6 md:px-20 h-20 flex items-center justify-between">
 
-        <!-- Esquerda: Brand / Logo -->
-        <a href="{{ route('dashboard') }}" class="font-sora text-2xl font-bold text-aether-light tracking-tighter shrink-0">
-            AETHER <span class="text-aether-blue block md:inline">MOTORS</span>
+        <a class="flex items-center gap-2 font-mono text-xs uppercase tracking-widest font-bold text-white hover:text-[#b8c3ff] transition-colors" href="{{ route('dashboard') }}">
+            <i class="bi bi-car-front text-base"></i> Stand Viaturas
         </a>
 
-        <!-- Centro: Links de Gestão Interna -->
-        <div class="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest">
-            <a class="pb-1 transition-colors {{ request()->routeIs('dashboard') ? 'text-aether-blue border-b-2 border-aether-blue' : 'text-aether-gray hover:text-white' }}" href="{{ route('dashboard') }}">PAINEL</a>
-            <a class="pb-1 transition-colors {{ request()->routeIs('clientes.*') ? 'text-aether-blue border-b-2 border-aether-blue' : 'text-aether-gray hover:text-white' }}" href="{{ route('clientes.index') }}">CLIENTES</a>
-            <a class="pb-1 transition-colors {{ request()->routeIs('viaturas.*') ? 'text-aether-blue border-b-2 border-aether-blue' : 'text-aether-gray hover:text-white' }}" href="{{ route('viaturas.index') }}">VIATURAS</a>
-            <a class="pb-1 transition-colors {{ request()->routeIs('vendas.*') ? 'text-aether-blue border-b-2 border-aether-blue' : 'text-aether-gray hover:text-white' }}" href="{{ route('vendas.index') }}">VENDAS</a>
+        <!-- Botão Hambúrguer para Mobile -->
+        <button id="menu-toggle" type="button" class="md:hidden text-white focus:outline-none p-2">
+            <i class="bi bi-list text-2xl"></i>
+        </button>
+
+        <!-- Links de Navegação -->
+        <div id="menu-links" class="hidden absolute top-20 left-0 w-full bg-[#0e0e0e] border-b border-white/5 flex-col p-6 space-y-4 md:space-y-0 md:p-0 md:relative md:top-0 md:w-auto md:bg-transparent md:border-none md:flex md:flex-row md:items-center md:gap-8 font-mono text-[11px] uppercase tracking-widest font-bold">
+            <a class="text-[#8e90a2] hover:text-white transition-colors" href="{{ route('dashboard') }}">Painel</a>
+            <a class="text-[#8e90a2] hover:text-white transition-colors" href="{{ route('clientes.index') }}">Clientes</a>
+            <a class="text-[#8e90a2] hover:text-white transition-colors" href="{{ route('viaturas.index') }}">Viaturas</a>
+            <a class="text-[#8e90a2] hover:text-white transition-colors" href="{{ route('vendas.index') }}">Vendas</a>
+
+            <div class="h-px bg-white/10 my-2 md:hidden"></div>
+
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:gap-6 md:ml-auto">
+                @auth
+                    <span class="text-white flex items-center gap-2">
+                        <i class="bi bi-person-circle"></i> {{ auth()->user()->name }}
+                    </span>
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="border border-white/10 px-4 py-2 hover:bg-white/5 text-white transition-all duration-300">Sair</button>
+                    </form>
+                @else
+                    <a class="text-[#8e90a2] hover:text-white transition-colors" href="{{ route('login') }}">Entrar</a>
+                    <a class="border border-white/10 px-4 py-2 hover:bg-white/5 text-white transition-all duration-300 text-center" href="{{ route('register') }}">Registar</a>
+                @endauth
+            </div>
         </div>
 
-        <!-- Direita: Autenticação / Perfil Alinhado Seguro com SVG -->
-        <div class="flex items-center gap-6 shrink-0">
-            @auth
-                <div class="hidden sm:flex items-center gap-2 font-mono text-xs text-aether-gray uppercase tracking-wider">
-                    <!-- Ícone SVG de Alta Fidelidade que elimina erros de renderização -->
-                    <svg class="w-5 h-5 text-aether-blue" fill="currentColor" viewBox="0 0 20 20" xmlns="http://w3.org">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a3 3 0 11-6 0 3 3 0 016 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="max-w-[150px] truncate font-medium text-white">{{ auth()->user()->name }}</span>
-                </div>
+    </div>
+</nav>
 
-                <form action="{{ route('logout') }}" method="POST" class="inline m-0 p-0">
-                    @csrf
-                    <button type="submit" class="font-mono text-xs uppercase tracking-widest px-5 py-2.5 bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white transition-colors border border-red-500/20 rounded-sm font-bold">
-                        SAIR
-                    </button>
-                </form>
-            @else
-                <a href="/login" class="font-mono text-xs uppercase tracking-widest px-5 py-2.5 bg-aether-blue text-aether-dark-blue font-bold transition-opacity hover:opacity-90 rounded-sm">
-                    SELL/LOGIN
-                </a>
-            @endauth
+{{-- Contentor Principal Flexível (Removeu-se o container rígido do Bootstrap) --}}
+<main class="flex-grow w-full">
+
+    {{-- Sistema de Notificações adaptado estruturalmente --}}
+    @if(session('success') || $errors->any())
+        <div class="max-w-[1440px] mx-auto px-6 md:px-20 mt-4">
+            @if(session('success'))
+                <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 p-4 rounded mb-4 flex items-center gap-2 text-sm font-mono">
+                    <i class="bi bi-check-circle"></i> {{ session('success') }}
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="bg-rose-950/40 border border-rose-500/30 text-rose-400 p-4 rounded mb-4 text-sm font-mono">
+                    <ul class="list-disc pl-4 space-y-1">
+                        @foreach($errors->all() as $erro)
+                            <li>{{ $erro }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </div>
-    </nav>
+    @endif
 
-    <!-- Contentor com Padding Superior devido à Navbar Fixa -->
-    <main class="pt-32 pb-24 px-6 md:px-20 min-h-screen">
+    {{-- Injeção do conteúdo da página inicial ou outras sub-views --}}
+    @yield('content')
 
-        <!-- Mensagens Flash Unificadas -->
-        @if(session('success'))
-            <div class="glass-card border-green-500/30 bg-green-500/10 text-green-400 p-4 rounded-sm mb-8 flex items-center justify-between gap-3 text-xs font-mono tracking-wider">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-sm">check_circle</span>
-                    <span>SYSTEM_SUCCESS // {{ strtoupper(session('success')) }}</span>
-                </div>
-                <button onclick="this.parentElement.remove()" class="hover:text-green-200 transition-colors">
-                    <span class="material-symbols-outlined text-sm">close</span>
-                </button>
-            </div>
-        @endif
+</main>
 
-        @if($errors->any())
-            <div class="glass-card border-red-500/30 bg-red-500/10 text-red-400 p-5 rounded-sm mb-8 font-mono text-xs tracking-wider">
-                <div class="flex items-center gap-2 mb-3 font-bold text-red-300">
-                    <span class="material-symbols-outlined text-sm">error</span>
-                    <span>VALIDATION_ERROR // REJECTED SPECIFICATIONS:</span>
-                </div>
-                <ul class="list-disc list-inside space-y-1 text-red-300/80 pl-2 tracking-normal normal-case">
-                    @foreach($errors->all() as $erro)
-                        <li>{{ $erro }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+{{-- O JS do Bootstrap foi mantido apenas como utilitário global caso outras páginas necessitem dele --}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        @yield('content')
-    </main>
+<script>
+    // Script nativo e leve para controlo do menu mobile sem depender do Bootstrap
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleBtn = document.getElementById('menu-toggle');
+        const menuLinks = document.getElementById('menu-links');
 
-    @stack('scripts')
+        if (toggleBtn && menuLinks) {
+            toggleBtn.addEventListener('click', function () {
+                menuLinks.classList.toggle('hidden');
+                menuLinks.classList.toggle('flex');
+            });
+        }
+    });
+</script>
+
+@stack('scripts')
+
 </body>
 </html>

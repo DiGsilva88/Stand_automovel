@@ -5,54 +5,33 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Viatura; // Importação da Viatura
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'telefone',
+        'name', 'email', 'password', 'is_admin', // ou 'role'
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    // ... Outros métodos como o seu es_admin ...
 
-    protected function casts(): array
+    /**
+     * Relacionamento dos Favoritos da Garagem
+     */
+     public function favorites()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        // Força o Laravel a usar a tabela 'favoritos' e os nomes de coluna padrão
+        return $this->belongsToMany(Viatura::class, 'favoritos', 'user_id', 'viatura_id');
     }
 
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
-
-    public function isVendedor(): bool
-    {
-        return $this->role === 'vendedor';
-    }
-
-    public function isCliente(): bool
-    {
-        return $this->role === 'cliente';
-    }
-
-    public function favoritos()
-    {
-        return $this->hasMany(Favorito::class);
-    }
-
+       /**
+     * Obter as marcações feitas por este utilizador baseando-se no nome registado.
+     */
     public function visitas()
     {
-        return $this->hasMany(Visita::class, 'email_cliente', 'email');
+        // Como não tem user_id, filtramos as visitas cujo 'nome_cliente' seja igual ao 'name' do utilizador
+        return $this->hasMany(\App\Models\Visita::class, 'nome_cliente', 'name');
     }
 }

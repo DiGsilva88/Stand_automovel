@@ -8,12 +8,16 @@ use App\Http\Controllers\VendaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VisitaController;
 use App\Http\Controllers\FavoritoController;
+use App\Http\Middleware\EnsureUserIsAdminOrSeller;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
 // ROTAS PÚBLICAS (Qualquer visitante acede)
 // ==========================================
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Catálogo público de Viaturas (Leitura)
+Route::get('/viaturas', [ViaturaController::class, 'index'])->name('viaturas.index');
 
 // Formulário público de marcação de visita / Test Drive
 Route::get('/marcar-visita', [VisitaController::class, 'create'])->name('visitas.create');
@@ -28,11 +32,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard Comum (Diferencia Cliente/Admin dinamicamente no Controller)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Rota para Clientes guardarem favoritos no Showroom
+    // ------------------------------------------
+    // ÁREA EXCLUSIVA DO CLIENTE (My Garage)
+    // ------------------------------------------
+    Route::get('/my-garage', [FavoritoController::class, 'index'])->name('garage.index');
     Route::post('/viaturas/{viatura}/favorito', [FavoritoController::class, 'toggle'])->name('favoritos.toggle');
-
-    // Catálogo público de Viaturas (Leitura)
-    Route::get('/viaturas', [ViaturaController::class, 'index'])->name('viaturas.index');
 
     // Gestão do Perfil do Utilizador (Breeze)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -42,8 +46,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ------------------------------------------
     // ROTAS ACESSÍVEIS POR ADMINS E VENDEDORES
     // ------------------------------------------
-    Route::resource('clientes', ClienteController::class);
-    Route::resource('vendas', VendaController::class);
+    Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
+
+        Route::resource('clientes', ClienteController::class);
+        Route::resource('vendas', VendaController::class);
+    });
 
     // ------------------------------------------
     // SUBGRUPO EXCLUSIVO DE ADMINISTRADORES
