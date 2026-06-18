@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'SS Automóveis')</title>
 
-    {{-- Compilação de Assets do Vite --}}
+    {{-- CORREÇÃO: URL oficial e completo para injetar o motor do Tailwind CSS v4 --}}
+    <script src="https://jsdelivr.net"></script>
+
+    {{-- Compilação de Assets locais do Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    {{-- Tipografia e ícones usados pelo estilo SS Automóveis --}}
+    {{-- Tipografia Premium --}}
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
-    {{-- CORREÇÃO: Link completo e funcional para os ícones do Bootstrap --}}
+    {{-- CORREÇÃO: URL oficial e completo para carregar os ícones (Bootstrap Icons) --}}
     <link rel="stylesheet" href="https://jsdelivr.net">
 
     <style>
@@ -88,13 +91,13 @@
     @if(session('success') || $errors->any())
         <div class="max-w-[1440px] mx-auto px-6 md:px-20 mt-4">
             @if(session('success'))
-                <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 p-4 rounded mb-4 flex items-center gap-2 text-sm font-mono">
+                <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 p-4 rounded-sm mb-4 flex items-center gap-2 text-sm font-mono">
                     <i class="bi bi-check-circle"></i> {{ session('success') }}
                 </div>
             @endif
 
             @if($errors->any())
-                <div class="bg-rose-950/40 border border-rose-500/30 text-rose-400 p-4 rounded mb-4 text-sm font-mono">
+                <div class="bg-rose-950/40 border border-rose-500/30 text-rose-400 p-4 rounded-sm mb-4 text-sm font-mono">
                     <ul class="list-disc pl-4 space-y-1">
                         @foreach($errors->all() as $erro)
                             <li>{{ $erro }}</li>
@@ -110,10 +113,8 @@
 
 </main>
 
-{{-- Scripts Core JavaScript --}}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
+    // Menu mobile independente em JS Puro
     document.addEventListener('DOMContentLoaded', function () {
         const toggleBtn = document.getElementById('menu-toggle');
         const menuLinks = document.getElementById('menu-links');

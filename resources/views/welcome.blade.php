@@ -4,7 +4,7 @@
 
 @section('content')
 
-{{-- Remove os paddings extra do contentor principal nesta página para o hero ocupar o ecrã total --}}
+{{-- Ajustes estruturais locais para o tema escuro premium --}}
 <style>
     main { max-width: 100% !important; padding: 0 !important; margin-top: -1rem !important; }
     body { background-color: #131313; color: #e5e2e1; }
@@ -15,238 +15,213 @@
         transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .glass-card:hover {
-        border-color: rgba(184, 195, 255, 0.3);
-        background: rgba(46, 91, 255, 0.05);
+        border-color: rgba(184, 195, 255, 0.3) !important;
+        background: rgba(46, 91, 255, 0.05) !important;
         transform: translateY(-8px);
     }
     .hero-vignette {
         background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(19,19,19,1) 85%);
     }
+    /* Força a ocultação das barras de scroll mas mantém o deslize ativo */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 
-<!-- ============ HERO SECTION ============ -->
+<!-- ============ PRIMEIRO CONTENTOR: HERO SECTION COM VÍDEO DE FUNDO ============ -->
 <section class="relative min-h-[calc(100vh-80px)] w-full flex items-center overflow-hidden">
 
-    <!-- Imagem de fundo (foto real do stand, escurecida e em tom dramático) -->
+    <!-- Vídeo de Fundo Automático e em Loop (Cinemático) -->
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('fotos/fachada-stand.jpg') }}" alt="SS Automóveis"
-             class="w-full h-full object-cover grayscale contrast-125 brightness-50"/>
+        <video autoplay loop muted playsinline class="w-full h-full object-cover grayscale contrast-125 brightness-50">
+            <source src="{{ asset('videos/hero-background.mp4') }}" type="video/mp4">
+            <!-- Fallback caso o navegador bloqueie o vídeo -->
+            <img src="{{ asset('fotos/fachada-stand.jpg') }}" class="w-full h-full object-cover grayscale brightness-50"/>
+        </video>
         <div class="absolute inset-0 hero-vignette"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#0e0e0e] via-[#0e0e0e]/60 to-transparent"></div>
     </div>
 
-    <!-- Conteúdo de texto -->
+    <!-- Conteúdo de Texto Superior -->
     <div class="relative z-10 px-6 md:px-20 w-full max-w-[1440px] mx-auto">
         <div class="max-w-2xl space-y-6">
-
-            <!-- Eyebrow -->
             <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full inline-block animate-pulse" style="background:#b8c3ff;"></span>
-                <span class="font-mono text-[11px] font-bold tracking-[0.25em] uppercase" style="color:#b8c3ff;">
+                <span class="w-2 h-2 rounded-full inline-block animate-pulse bg-[#b8c3ff]"></span>
+                <span class="font-mono text-[11px] font-bold tracking-[0.25em] uppercase text-[#b8c3ff]">
                     O FUTURO DA PERFORMANCE
                 </span>
             </div>
 
-            <!-- Título -->
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tighter leading-[1.05] uppercase text-white"
-                style="font-family: Sora, sans-serif;">
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tighter leading-[1.05] uppercase text-white" style="font-family: Sora, sans-serif;">
                 DISTINÇÃO <br>
-                <span class="font-normal" style="color:#8e90a2;">ABSOLUTA.</span>
+                <span class="font-normal text-[#8e90a2]">ABSOLUTA.</span>
             </h1>
 
-            <!-- Subtítulo -->
-            <p class="text-sm md:text-base leading-relaxed max-w-md" style="color:#c4c5d9;">
-                Onde o prestígio automóvel encontra a precisão absoluta. Cada viatura no nosso stand é
-                selecionada para quem exige excelência em cada detalhe.
+            <p class="text-sm md:text-base leading-relaxed max-w-md text-[#c4c5d9]">
+                Onde o prestígio automóvel encontra a precisão absoluta. Cada viatura no nosso stand é selecionada para quem exige excelência em cada detalhe.
             </p>
 
-            <!-- Botões de ação -->
             <div class="flex flex-wrap gap-4 pt-4 font-mono text-xs uppercase tracking-widest font-bold">
-                <a href="{{ route('viaturas.index') }}"
-                   class="px-8 py-4 text-center min-w-[170px] transition-all duration-300"
-                   style="background:#2e5bff; color:#efefff;">
+                <a href="{{ route('viaturas.index') }}" class="px-8 py-4 text-center min-w-[170px] transition-all duration-300 bg-[#2e5bff] text-[#efefff]">
                     VER VIATURAS
                 </a>
-                <a href="{{ route('login') }}"
-                   class="border px-8 py-4 text-center min-w-[170px] transition-all duration-300 text-white hover:bg-white/5"
-                   style="border-color: rgba(255,255,255,0.15);">
+                <a href="{{ route('visitas.create') }}" class="border px-8 py-4 text-center min-w-[170px] transition-all duration-300 text-white hover:bg-white/5 border-white/15">
                     AGENDAR TEST DRIVE
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Indicador de scroll -->
+    <!-- Indicador de Scroll Minimalista -->
     <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[9px] font-mono tracking-widest text-white/30 animate-bounce">
         <span>EXPLORE</span>
-        <svg class="w-4 h-4" style="color:#b8c3ff;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
+        <span class="material-symbols-outlined text-sm text-[#b8c3ff]">keyboard_arrow_down</span>
     </div>
 </section>
 
-<!-- ============ FEATURED ARRIVALS ============ -->
-<section class="px-6 md:px-20 py-24 max-w-[1440px] mx-auto">
 
-    <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
-        <div class="space-y-2">
-            <h2 class="text-3xl md:text-4xl font-bold text-white" style="font-family: Sora, sans-serif;">
-                VIATURAS EM DESTAQUE
+<!-- ============ SEGUNDO CONTENTOR: VÍDEO DA VIATURA DE DESTAQUE EM ECRÃ TOTAL ============ -->
+<section class="relative w-full h-[60vh] md:h-[80vh] flex items-center overflow-hidden border-y border-white/5">
+
+    <!-- Vídeo do Porsche em loop e ajustado ao contentor -->
+    <div class="absolute inset-0 z-0">
+        <video autoplay loop muted playsinline class="w-full h-full object-cover contrast-115 brightness-40 grayscale hover:grayscale-0 transition-all duration-1000">
+            <source src="{{ asset('videos/porsche-video-path.mp4') }}" type="video/mp4">
+            <img src="{{ asset('fotos/porsche-911.jpg') }}" class="w-full h-full object-cover brightness-40"/>
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#131313] via-transparent to-[#131313]/80"></div>
+        <div class="absolute inset-0 bg-black/20"></div>
+    </div>
+
+    <!-- Banner Informativo Sobreposto -->
+    <div class="relative z-10 px-6 md:px-20 w-full max-w-[1440px] mx-auto flex justify-end">
+        <div class="glass-card p-8 md:p-10 max-w-md space-y-4 rounded-sm border-white/10 bg-black/60 backdrop-blur-md">
+            <span class="font-mono text-[9px] uppercase tracking-[0.2em] text-[#b8c3ff] font-bold block">DESTAQUE DA SEMANA</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-tight" style="font-family: Sora, sans-serif;">
+                PORSCHE 911 CARRERA S
             </h2>
-            <div class="h-1 w-24" style="background:#b8c3ff;"></div>
+            <p class="text-xs text-[#c4c5d9] leading-relaxed">
+                A lenda dos circuitos adaptada para a estrada. Sinta a engenharia alemã pura com motor boxer de 450 cv e aceleração dos 0 aos 100 km/h em apenas 3,7 segundos.
+            </p>
+            <div class="pt-2 flex items-center justify-between">
+                <span class="font-mono text-sm font-bold text-white">164.900 €</span>
+                <a href="{{ route('visitas.create') }}" class="font-mono text-[10px] uppercase tracking-wider bg-white text-black px-4 py-2.5 font-bold hover:bg-[#b8c3ff] transition-colors">
+                    SOLICITAR PROPOSTA
+                </a>
+            </div>
         </div>
-        <a href="{{ route('viaturas.index') }}"
-           class="font-mono text-[11px] uppercase tracking-widest flex items-center gap-2 transition-colors group"
-           style="color:#8e90a2;">
+    </div>
+</section>
+
+
+<!-- ============ TERCEIRO CONTENTOR: CARROSSEL HORIZONTAL DESLIZANTE ============ -->
+<section class="px-6 md:px-20 py-24 max-w-[1440px] mx-auto space-y-10">
+
+    <div class="flex flex-col md:flex-row justify-between items-end gap-4">
+        <div class="space-y-2">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight" style="font-family: Sora, sans-serif;">
+                ÚLTIMAS ENTRADAS EM STOCK
+            </h2>
+            <div class="h-0.5 w-20 bg-[#b8c3ff]"></div>
+        </div>
+        <a href="{{ route('viaturas.index') }}" class="font-mono text-[11px] uppercase tracking-widest flex items-center gap-2 text-[#8e90a2] hover:text-white transition-colors group">
             VER CATÁLOGO COMPLETO
             <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
         </a>
     </div>
 
-    <!-- Carrossel horizontal de viaturas -->
+    <!-- Carrossel Deslizante de Viaturas -->
     <div class="flex overflow-x-auto snap-x snap-mandatory gap-8 pb-6 no-scrollbar scroll-smooth">
 
-        <!-- Carro 1 -->
-        <div class="glass-card flex flex-col overflow-hidden group min-w-[85vw] md:min-w-[45vw] lg:min-w-[30vw] snap-start">
-            <div class="relative h-64 overflow-hidden">
-                <img src="{{ asset('fotos/carro2.jpg') }}" alt="Viatura em destaque"
-                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"/>
-                <div class="absolute top-4 right-4 backdrop-blur-md px-3 py-1 border border-white/10 font-mono text-[10px] uppercase"
-                     style="background: rgba(19,19,19,0.8); color:#e5e2e1;">
-                    Disponível
-                </div>
-            </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <h3 class="text-xl font-bold text-white" style="font-family: Sora, sans-serif;">BMW SÉRIE 3</h3>
-                    <p class="font-mono text-[12px] tracking-widest" style="color:#b8c3ff;">42.500 €</p>
-                </div>
-                <div class="grid grid-cols-3 border-t pt-4 gap-2" style="border-color: rgba(255,255,255,0.08);">
-                    <div class="flex flex-col">
-                        <span class="font-mono text-[10px] uppercase" style="color:#8e90a2;">Ano</span>
-                        <span class="text-sm font-bold text-white">2023</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-mono text-[10px] uppercase" style="color:#8e90a2;">Km</span>
-                        <span class="text-sm font-bold text-white">18.000</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-mono text-[10px] uppercase" style="color:#8e90a2;">Combustível</span>
-                        <span class="text-sm font-bold text-white">DIESEL</span>
+        @forelse($viaturasExibicao ?? [] as $v)
+            <div class="glass-card flex flex-col overflow-hidden group min-w-[85vw] md:min-w-[45vw] lg:min-w-[28vw] snap-start rounded-sm">
+
+                <div class="relative h-60 overflow-hidden bg-[#0e0e0e]">
+                    <img src="{{ $v->foto ? asset('fotos/' . $v->foto) : asset('fotos/fachada-stand.jpg') }}" alt="{{ $v->marca }}"
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0 contrast-110"/>
+                    <div class="absolute top-4 right-4 backdrop-blur-md px-3 py-1 border border-white/10 font-mono text-[9px] uppercase tracking-wider bg-black/60 text-[#e5e2e1]">
+                        {{ $v->estado ?? 'Disponível' }}
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Carro 2 -->
-        <div class="glass-card flex flex-col overflow-hidden group min-w-[85vw] md:min-w-[45vw] lg:min-w-[30vw] snap-start">
-            <div class="relative h-64 overflow-hidden">
-                <img src="{{ asset('fotos/bmw.jpg') }}" alt="Viatura em destaque"
-                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"/>
-                <div class="absolute top-4 right-4 backdrop-blur-md px-3 py-1 border border-white/10 font-mono text-[10px] uppercase"
-                     style="background: rgba(19,19,19,0.8); color:#e5e2e1;">
-                    Novidade
-                </div>
-            </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <h3 class="text-xl font-bold text-white" style="font-family: Sora, sans-serif;">BMW M4 COMPETITION</h3>
-                    <p class="font-mono text-[12px] tracking-widest" style="color:#b8c3ff;">89.900 €</p>
-                </div>
-                <div class="grid grid-cols-3 border-t pt-4 gap-2" style="border-color: rgba(255,255,255,0.08);">
-                    <div class="flex flex-col">
-                        <span class="font-mono text-[10px] uppercase" style="color:#8e90a2;">Ano</span>
-                        <span class="text-sm font-bold text-white">2024</span>
+                <div class="p-6 space-y-4 flex-grow flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-white uppercase tracking-tight" style="font-family: Sora, sans-serif;">
+                            {{ $v->marca }} <span class="font-light text-[#8e90a2]">{{ $v->modelo }}</span>
+                        </h3>
+                        <p class="font-mono text-sm font-bold tracking-widest mt-1 text-[#b8c3ff]">
+                            {{ number_format($v->preco ?? 0, 0, ',', '.') }} €
+                        </p>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="font-mono text-[10px] uppercase" style="color:#8e90a2;">Km</span>
-                        <span class="text-sm font-bold text-white">2.300</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-mono text-[10px] uppercase" style="color:#8e90a2;">Combustível</span>
-                        <span class="text-sm font-bold text-white">GASOLINA</span>
+
+                    <div class="grid grid-cols-3 border-t border-white/5 pt-4 gap-2">
+                        <div class="flex flex-col">
+                            <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Ano</span>
+                            <span class="text-xs font-bold text-white">{{ $v->ano }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Kms</span>
+                            <span class="text-xs font-bold text-white truncate">
+                                {{ number_format($v->quilometros ?? 0, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Energia</span>
+                            <span class="text-xs font-bold text-white uppercase truncate text-[11px]">{{ $v->combustivel }}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Carro 3 -->
-        <div class="glass-card flex flex-col overflow-hidden group min-w-[85vw] md:min-w-[45vw] lg:min-w-[30vw] snap-start">
-            <div class="relative h-64 overflow-hidden">
-                <img src="{{ asset('fotos/Opel.jpg') }}" alt="Viatura em destaque"
-                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"/>
             </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <h3 class="text-xl font-bold text-white" style="font-family: Sora, sans-serif;">OPEL ASTRA</h3>
-                    <p class="font-mono text-[12px] tracking-widest" style="color:#b8c3ff;">18.450 €</p>
+        @empty
+            @foreach([
+                ['M4 Competition Coupe', 'BMW', '118.500', '2023', 'bmw-m4.jpg'],
+                ['911 Carrera S', 'Porsche', '164.900', '2022', 'porsche-911.jpg'],
+
+                ['RS6 Avant Performance', 'Audi', '189.900', '2024', 'audi-rs6.jpg']
+            ] as $carroDummy)
+                <div class="glass-card flex flex-col overflow-hidden group min-w-[85vw] md:min-w-[45vw] lg:min-w-[28vw] snap-start rounded-sm">
+
+                    {{-- Foto do Veículo --}}
+                    <div class="relative h-60 overflow-hidden bg-[#0e0e0e]">
+                        <img src="{{ asset('fotos/' . $carroDummy[4]) }}" alt="Carro de Exposição"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0 contrast-110"/>
+                        <div class="absolute top-4 right-4 backdrop-blur-md px-3 py-1 border border-white/10 font-mono text-[9px] uppercase tracking-wider bg-black/60 text-[#e5e2e1]">
+                            Exposição
+                        </div>
+                    </div>
+
+                    {{-- Detalhes Técnicos --}}
+                    <div class="p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-white uppercase tracking-tight" style="font-family: Sora, sans-serif;">
+                                {{ $carroDummy[1] }} <span class="font-normal text-[#8e90a2]">{{ $carroDummy[0] }}</span>
+                            </h3>
+                            <p class="font-mono text-sm font-bold tracking-widest mt-1 text-[#b8c3ff]">
+                                {{ $carroDummy[2] }} €
+                            </p>
+                        </div>
+
+                        {{-- Grelha de Especificações --}}
+                        <div class="grid grid-cols-3 border-t border-white/5 pt-4 gap-2 text-left">
+                            <div class="flex flex-col">
+                                <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Ano</span>
+                                <span class="text-xs font-bold text-white">{{ $carroDummy[3] }}</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Kms</span>
+                                <span class="text-xs font-bold text-white">15.000</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Energia</span>
+                                <span class="text-xs font-bold text-white uppercase truncate text-[11px]">Gasolina</span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="grid grid-cols-3 border-t pt-4 gap-2" style="border-color: rgba(255,255,255,0.08);">
-                    <div class="flex flex-col">
-                        <span class="font-mono text-[10px] uppercase" style="color:#8e90a2;">Ano</span>
-                        <span class="text-sm font-bold text-white">2021</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-mono text-[10px] uppercase" style="color:#8e90a2;">Km</span>
-                        <span class="text-sm font-bold text-white">45.200</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-mono text-[10px] uppercase" style="color:#8e90a2;">Combustível</span>
-                        <span class="text-sm font-bold text-white">DIESEL</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+            @endforeach
+        @endforelse
 
-    </div>
-</section>
-
-<!-- ============ QUOTE SECTION ============ -->
-<section class="py-24 overflow-hidden" style="background:#0e0e0e;">
-    <div class="px-6 md:px-20 max-w-[1440px] mx-auto relative">
-        <div class="absolute -top-16 -left-4 text-[160px] font-bold text-white/5 pointer-events-none select-none"
-             style="font-family: Sora, sans-serif;">"</div>
-        <div class="relative z-10 space-y-6">
-            <p class="text-2xl md:text-4xl leading-snug italic max-w-4xl text-white font-bold"
-               style="font-family: Sora, sans-serif;">
-                "NÃO VENDEMOS APENAS VIATURAS; CURAMOS O ENCONTRO ENTRE MOVIMENTO E PRECISÃO."
-            </p>
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-[1px]" style="background:#b8c3ff;"></div>
-                <span class="font-mono text-[11px] uppercase tracking-widest" style="color:#c4c5d9;">
-                </span>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ============ PARTNER BRANDS ============ -->
-<section class="py-24 px-6 md:px-20 border-t" style="background:#131313; border-color: rgba(255,255,255,0.05);">
-    <div class="max-w-[1440px] mx-auto space-y-10">
-        <h2 class="text-center font-mono text-[11px] uppercase tracking-widest" style="color:#8e90a2;">
-
-        </h2>
-        <div class="flex flex-wrap justify-center items-center gap-12 md:gap-20">
-
-            <div class="h-10 flex items-center opacity-50 hover:opacity-100 transition-all duration-300">
-                <span class="text-2xl font-bold text-white tracking-tight" style="font-family: Sora, sans-serif;">BMW</span>
-            </div>
-            <div class="h-10 flex items-center opacity-50 hover:opacity-100 transition-all duration-300">
-                <span class="text-2xl font-bold text-white tracking-tight" style="font-family: Sora, sans-serif;">OPEL</span>
-            </div>
-            <div class="h-10 flex items-center opacity-50 hover:opacity-100 transition-all duration-300">
-                <span class="text-2xl font-bold text-white tracking-tight" style="font-family: Sora, sans-serif;">AUDI</span>
-            </div>
-            <div class="h-10 flex items-center opacity-50 hover:opacity-100 transition-all duration-300">
-                <span class="text-2xl font-bold text-white tracking-tight" style="font-family: Sora, sans-serif;">MERCEDES-BENZ</span>
-            </div>
-            <div class="h-10 flex items-center opacity-50 hover:opacity-100 transition-all duration-300">
-                <span class="text-2xl font-bold text-white tracking-tight" style="font-family: Sora, sans-serif;">VOLKSWAGEN</span>
-            </div>
-
-        </div>
     </div>
 </section>
 
