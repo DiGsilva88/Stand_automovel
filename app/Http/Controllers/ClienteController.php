@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -29,21 +30,19 @@ class ClienteController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'nome'     => 'required|string|max:255',
-        'email'    => 'required|string|email|max:255|unique:clientes',
-        'telefone' => 'nullable|string|max:20',
-        'nif'      => 'nullable|string|size:9|unique:clientes',
-    ]);
+    {
+        $request->validate([
+            'nome'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:clientes',
+            'telefone' => 'nullable|string|max:20',
+            'nif'      => 'nullable|string|size:9|unique:clientes',
+        ]);
 
-    // Criação do registo com os dados validados
-    \App\Models\Cliente::create($request->all());
+        Cliente::create($request->all());
 
-    // Redireciona com a mensagem que o layout transforma em estilo corporativo uppercase
-    return redirect()->route('clientes.index')
-        ->with('success', 'Cliente registado com sucesso no ecossistema.');
-}
+        return redirect()->route('clientes.index')
+            ->with('success', 'Cliente registado com sucesso no ecossistema.');
+    }
 
     /**
      * Display the specified resource.
@@ -51,7 +50,11 @@ class ClienteController extends Controller
     public function show(string $id)
     {
         $cliente = Cliente::with('vendas.viatura')->findOrFail($id);
-        return view('clientes.show', compact('cliente'));
+        
+        // Procura se o cliente já criou uma conta de utilizador com este e-mail
+        $usuarioVinculado = User::where('email', $cliente->email)->first();
+
+        return view('clientes.show', compact('cliente', 'usuarioVinculado'));
     }
 
     /**
@@ -70,8 +73,6 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::findOrFail($id);
 
-        // CORREÇÃO: Validação alinhada com as colunas reais da BD (telefone, morada),
-        // evitando duplicados exceto o próprio id
         $request->validate([
             'nome' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:clientes,email,' . $id,
@@ -96,4 +97,39 @@ class ClienteController extends Controller
         return redirect()->route('clientes.index')
                         ->with('success', 'Cliente eliminado com sucesso.');
     }
+
+    /**
+     * Alternar permissões de administrador com base no e-mail do cliente.
+     */
+    /**
+     * Alternar permissões de administrador com base no e-mail do cliente.
+     */
+       /**
+     * Alternar permissões de administrador com base no e-mail do cliente.
+     */
+    public function toggleAdmin(string $id)
+    {
+        $cliente = Cliente::findOrFail($id);
+        
+        // Localiza a conta de login na tabela users usando o e-mail do cliente
+        $user = User::where('email', $cliente->email)->first();
+
+        if (!$user) {
+            return back()->with('error', 'Este cliente ainda não criou uma conta de utilizador no portal.');
+        }
+        // CORREÇÃO UNIVERSAL: Utiliza getKey() para extrair o ID numérico/string de forma segura
+        if ((string)$user->getKey() === (string)auth()->id()) {
+            return back()->with('error', 'Não pode revogar as suas próprias permissões.');
+        }
+
+        
+
+        // Alterna entre admin e cliente
+        $novoRole = ($user->role === 'admin') ? 'client' : 'admin';
+        $user->update(['role' => $novoRole]);
+
+        return back()->with('success', 'Estatuto de acesso atualizado com sucesso no ecossistema.');
+    }
+
+
 }

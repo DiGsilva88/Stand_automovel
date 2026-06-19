@@ -10,7 +10,7 @@
 
     /* Definição das novas cores do tema configuradas no cabeçalho */
     :root {
-        --color-primary: #b8c3ff;
+        --color-primary: #fafafd;
         --color-surface-dim: #131313;
         --color-outline: #8e90a2;
         --color-on-surface-variant: #c4c5d9;
@@ -72,7 +72,7 @@
             </p>
             <div class="flex flex-wrap gap-4 pt-2">
                 <a href="{{ route('viaturas.index') }}"
-                   class="bg-[#b8c3ff] hover:bg-white text-[#002388] px-8 py-4 font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 rounded-sm">
+                   class="bg-[#0e0e0e] hover:bg-white text-[#b8c3ff] px-8 py-4 font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 rounded-sm">
                     Ver Viaturas
                 </a>
                 <a href="{{ route('visitas.create') }}"

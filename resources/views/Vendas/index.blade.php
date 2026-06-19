@@ -61,7 +61,7 @@
 
                         <!-- Valor Total em Azul Pastel Premium -->
                         <td class="p-5 text-right font-mono font-bold text-[#b8c3ff] text-sm tracking-wider">
-                            {{ number_format($venda->valor_total, 0, ',', '.') }} €
+                            {{ number_format($venda->valor_venda, 0, ',', '.') }} €
                         </td>
 
                         <!-- Ações Laterais -->

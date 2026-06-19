@@ -68,17 +68,17 @@
 
             </div>
 
-            <!-- Valor Comercial da Transação -->
-            <div class="flex flex-col space-y-2">
-                <label for="valor_total" class="font-mono text-[10px] text-[#8e90a2] uppercase tracking-widest font-medium">Valor Corrigido da Venda (€)</label>
-                <div class="relative flex items-center">
-                    <input type="number" name="valor_total" id="valor_total" required step="0.01"
-                           value="{{ old('valor_total', $venda->valor_total) }}"
-                           class="w-full bg-[#1a1a1a] border border-white/10 rounded-sm px-4 py-3 text-sm font-mono font-bold text-[#b8c3ff] tracking-wide focus:outline-none focus:border-[#b8c3ff]/50 transition-colors">
-                    <span class="absolute right-4 font-mono text-xs text-[#8e90a2] uppercase">EUR</span>
-                </div>
-                @error('valor_total') <span class="text-xs text-red-400 font-mono mt-1">{{ $message }}</span> @enderror
-            </div>
+            <!-- Valor Comercial da Transação Corrigido -->
+<div class="flex flex-col space-y-2">
+    <label for="valor_venda" class="font-mono text-[10px] text-[#8e90a2] uppercase tracking-widest font-medium">Valor Corrigido da Venda (€)</label>
+    <div class="relative flex items-center">
+        <input type="number" name="valor_venda" id="valor_venda" required step="0.01"
+               value="{{ old('valor_venda', $venda->valor_venda ?? '') }}"
+               class="w-full bg-[#1a1a1a] border border-white/10 rounded-sm px-4 py-3 text-sm font-mono font-bold text-[#b8c3ff] tracking-wide focus:outline-none focus:border-[#b8c3ff]/50 transition-colors">
+        <span class="absolute right-4 font-mono text-xs text-[#8e90a2] uppercase">EUR</span>
+    </div>
+    @error('valor_venda') <span class="text-xs text-red-400 font-mono mt-1">{{ $message }}</span> @enderror
+</div>
 
             <!-- Botões de Submissão -->
             <div class="flex justify-end items-center gap-4 pt-4 border-t border-white/5">

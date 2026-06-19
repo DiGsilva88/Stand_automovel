@@ -33,6 +33,15 @@
                 @error('email') <span class="text-xs text-red-400 font-mono mt-1">{{ $message }}</span> @enderror
             </div>
 
+            <!-- Campo Telefone Adicionado -->
+<div class="flex flex-col space-y-2">
+    <label for="telefone" class="font-mono text-[10px] text-[#8e90a2] uppercase tracking-widest font-medium">Contacto Telefónico</label>
+    <input id="telefone" type="text" name="telefone" value="{{ old('telefone') }}" required placeholder="Ex: 9xx xxx xxx"
+           class="w-full bg-[#1a1a1a] border border-white/10 rounded-sm px-4 py-3 text-sm font-mono text-white focus:outline-none focus:border-[#b8c3ff]/50 transition-colors">
+    @error('telefone') <span class="text-xs text-red-400 font-mono mt-1">{{ $message }}</span> @enderror
+</div>
+
+
             <!-- Palavra-passe -->
             <div class="flex flex-col space-y-2">
                 <label for="password" class="font-mono text-[10px] text-[#8e90a2] uppercase tracking-widest font-medium">Definir Palavra-passe</label>

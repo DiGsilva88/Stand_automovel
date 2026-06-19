@@ -60,51 +60,47 @@
             <span class="material-symbols-outlined text-[#b8c3ff] text-lg">favorite</span>
             <h2 class="text-lg font-bold uppercase tracking-widest text-white font-mono">Modelos de Eleição</h2>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @forelse($meusFavoritos ?? [] as $favorito)
-                @if($favorito->viatura)
-                <div class="glass-card rounded-sm overflow-hidden group flex flex-col justify-between">
-                    <div class="aspect-[16/10] overflow-hidden relative bg-[#1c1b1b]">
-                        @if($favorito->viatura->foto)
-                            <img src="{{ asset($favorito->viatura->foto) }}" alt="{{ $favorito->viatura->marca }}"
-                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
-                        @else
-                            <div class="w-full h-full flex items-center justify-center">
-                                <span class="material-symbols-outlined text-4xl text-[#8e90a2]">directions_car</span>
-                            </div>
-                        @endif
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    @forelse($meusFavoritos ?? [] as $carro)
+        <div class="glass-card rounded-sm overflow-hidden group flex flex-col justify-between">
+            <div class="aspect-[16/10] overflow-hidden relative bg-[#1c1b1b]">
+                @if($carro->foto)
+                    <img src="{{ asset($carro->foto) }}" alt="{{ $carro->marca }}"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+                @else
+                    <div class="w-full h-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-4xl text-[#8e90a2]">directions_car</span>
                     </div>
-
-                    <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
-                        <div>
-                            <span class="font-mono text-[10px] uppercase tracking-widest block mb-1 text-[#8e90a2]">
-                                {{ $favorito->viatura->marca }}
-                            </span>
-                            <h3 class="text-lg text-white font-bold uppercase truncate font-sora" style="font-family: 'Sora', sans-serif;">
-                                {{ $favorito->viatura->modelo }}
-                            </h3>
-                        </div>
-
-                        <div class="pt-4 border-t flex justify-between items-center font-mono text-xs border-white/5">
-                            <span class="font-bold text-sm text-[#b8c3ff]">
-                                {{ number_format($favorito->viatura->preco ?? 0, 0, ',', '.') }} €
-                            </span>
-                            <a href="{{ route('viaturas.show', $favorito->viatura->id) }}"
-                               class="text-white hover:text-[#b8c3ff] uppercase tracking-wider transition-colors inline-flex items-center gap-1">
-                                Ver Ficha
-                                <span class="material-symbols-outlined text-xs">arrow_forward</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
                 @endif
-            @empty
-                <div class="col-span-full border border-dashed p-16 text-center font-mono text-xs uppercase tracking-widest rounded-sm border-white/10 text-[#8e90a2]">
-                    Nenhum veículo guardado nos favoritos.
+            </div>
+            <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
+                <div>
+                    <span class="font-mono text-[10px] uppercase tracking-widest block mb-1 text-[#8e90a2]">
+                        {{ $carro->marca }}
+                    </span>
+                    <h3 class="text-lg text-white font-bold uppercase truncate font-sora" style="font-family: 'Sora', sans-serif;">
+                        {{ $carro->modelo }}
+                    </h3>
                 </div>
-            @endforelse
+                <div class="pt-4 border-t flex justify-between items-center font-mono text-xs border-white/5">
+                    <span class="font-bold text-sm text-[#b8c3ff]">
+                        {{ number_format($carro->preco ?? 0, 0, ',', '.') }} €
+                    </span>
+                    <a href="{{ route('viaturas.show', $carro->id) }}" 
+                       class="text-white hover:text-[#b8c3ff] uppercase tracking-wider transition-colors inline-flex items-center gap-1">
+                        Ver Ficha <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
         </div>
+    @empty
+        <div class="col-span-full border border-dashed p-16 text-center font-mono text-xs uppercase tracking-widest rounded-sm border-white/10 text-[#8e90a2]">
+            Nenhum veículo guardado nos favoritos.
+        </div>
+    @endforelse
+</div>
+
+      
     </section>
 
     <!-- SECÇÃO 2: GRID COMPACTA DE COMPROMISSOS COMERCIAIS -->

@@ -32,10 +32,9 @@ class DashboardController extends Controller
         $totalDisponiveis = Viatura::where('estado', 'Disponível')->count();
         $totalClientes = Cliente::count();
         $totalVendas = Venda::count();
-
-        // CORREÇÃO: Alinhado com o campo 'valor_total' que usamos na tabela index de vendas
-        $valorTotalVendas = Venda::sum('valor_total');
-
+        // Linha 37:
+        $valorTotalVendas = Venda::sum('valor_venda'); 
+        
         $ultimasVisitas = Visita::with('viatura')->latest()->take(5)->get();
 
         // ==========================================
@@ -47,11 +46,12 @@ class DashboardController extends Controller
         for ($mes = 1; $mes <= 12; $mes++) {
             $totalMes = Venda::whereYear('created_at', date('Y'))
                 ->whereMonth('created_at', $mes)
-                ->sum('valor_total'); // CORREÇÃO: Ajustado também para 'valor_total'
+                ->sum('valor_venda'); // Linha 49: Ajustado aqui também
 
             $faturamentoMensal[] = $totalMes;
         }
 
+        
         return view('dashboard-admin', compact(
             'totalViaturas', 'totalDisponiveis', 'totalClientes',
             'totalVendas', 'valorTotalVendas', 'ultimasVisitas',

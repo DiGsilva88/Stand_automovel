@@ -32,6 +32,8 @@ Route::middleware(['web', 'auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Gestão do Perfil do Utilizador (Breeze)
+    Route::put('/clientes/{user}/tornar-admin', [ProfileController::class, 'toggleAdmin'])->name('users.toggle-admin');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
