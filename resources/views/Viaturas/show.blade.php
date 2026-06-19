@@ -1,312 +1,138 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SS Automóveis — {{ $viatura->marca }} {{ $viatura->modelo }}</title>
-<link href="https://googleapis.com" rel="stylesheet">
+@extends('layouts.app')
+
+@section('title', $viatura->marca . ' ' . $viatura->modelo . ' — SS Automóveis')
+
+@section('content')
+
+<!-- Estilos e Efeitos Isolados do Showroom -->
 <style>
-  :root {
-    --black: #0a0a0a;
-    --dark: #111111;
-    --card: #161616;
-    --border: #222222;
-    --accent: #c8a84b;
-    --accent-dim: rgba(200,168,75,0.12);
-    --white: #f5f5f5;
-    --muted: #888888;
-    --success: #2ecc71;
-    --danger: #e74c3c;
-    --font-display: 'Barlow Condensed', sans-serif;
-    --font-body: 'Inter', sans-serif;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* ── NAVBAR MINIMALISTA ── */
-  .custom-navbar {
-    position: sticky; top: 0; z-index: 1000;
-    background: rgba(10,10,10,0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 40px;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 64px;
-    width: 100vw;
-  }
-  .custom-navbar a { text-decoration: none; }
-  .nav-logo-box { display: flex; align-items: center; gap: 8px; }
-  .nav-logo-ss {
-    font-family: var(--font-body); font-weight: 800; font-size: 20px;
-    letter-spacing: 2px; color: var(--white);
-  }
-  .nav-logo-pipe { color: #374151; font-weight: 100; font-size: 18px; }
-  .nav-logo-sub {
-    text-transform: uppercase; letter-spacing: 2px; font-size: 11px;
-    color: var(--accent); font-weight: 400;
-  }
-  .nav-links-box { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; align-items: center; }
-  .nav-links-box a {
-    color: var(--muted); font-size: 13px; font-weight: 500;
-    letter-spacing: 0.3px; transition: color .2s;
-  }
-  .nav-links-box a:hover, .nav-links-box a.active { color: var(--white); }
-  .nav-user { color: var(--white); font-size: 13px; font-weight: 500; }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 60px 20px;
-  }
-
-  /* ── VOLTAR ATRÁS ── */
-  .back-link {
-    display: inline-flex; align-items: center; gap: 8px;
-    color: var(--muted); text-decoration: none; font-size: 13px;
-    margin-bottom: 30px; transition: color 0.2s;
-  }
-  .back-link:hover { color: var(--accent); }
-
-  /* ── ESTRUTURA EM DOIS BLOCOS ── */
-  .showcase-wrapper {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 40px;
-    align-items: start;
-  }
-
-  /* Imagem Principal Focada */
-  .showcase-media {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    height: 500px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .showcase-media img {
-    width: 100%; height: 100%; object-fit: cover;
-  }
-  .no-img-text { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #444; }
-
-  /* Detalhes da Viatura */
-  .showcase-details {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 40px;
-  }
-
-  .vehicle-eyebrow {
-    font-size: 12px; font-weight: 700; letter-spacing: 2px;
-    color: var(--accent); text-transform: uppercase; margin-bottom: 8px;
-  }
-  .vehicle-title {
-    font-family: var(--font-display);
-    font-size: 48px; font-weight: 800; text-transform: uppercase;
-    line-height: 1; color: var(--white); margin-bottom: 20px;
-  }
-  .vehicle-price {
-    font-family: var(--font-display);
-    font-size: 36px; font-weight: 800; color: var(--white);
-    border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 24px;
-  }
-  .vehicle-price span { color: var(--accent); }
-
-  /* Ficha Técnica Detalhada */
-  .specs-list {
-    display: flex; flex-direction: column; gap: 14px; margin-bottom: 36px;
-  }
-  .spec-row {
-    display: flex; justify-content: space-between; font-size: 13px;
-    padding-bottom: 10px; border-bottom: 1px solid rgba(34,34,34,0.4);
-  }
-  .spec-row:last-child { border-bottom: none; }
-  .spec-label { color: var(--muted); }
-  .spec-value { color: var(--white); font-weight: 600; }
-
-  /* Painel de Ações Redondas */
-  .action-group {
-    display: flex; flex-direction: column; gap: 12px;
-  }
-  .btn-action {
-    width: 100%; text-align: center; padding: 14px;
-    font-size: 12px; font-weight: 700; letter-spacing: 1px;
-    text-transform: uppercase; border-radius: 50px; text-decoration: none;
-    transition: all 0.3s ease; display: block; cursor: pointer; outline: none;
-  }
-  .btn-gold {
-    background: var(--accent); color: var(--black); border: none;
-  }
-  .btn-gold:hover { opacity: 0.9; box-shadow: 0 0 20px rgba(200,168,75,0.2); }
-
-  .btn-outline {
-    background: transparent; color: var(--white); border: 1px solid var(--border);
-  }
-  .btn-outline:hover { border-color: var(--white); }
-
-  .btn-delete {
-    background: transparent; color: var(--danger); border: 1px solid rgba(231,76,60,0.2);
-    width: 100%;
-  }
-  .btn-delete:hover { background: var(--danger); color: var(--white); border-color: var(--danger); }
-
-  /* ── BOTÃO DE FAVORITOS (GARAGEM) ── */
-  .btn-favorito {
-    width: 100%; text-align: center; padding: 14px;
-    font-size: 12px; font-weight: 700; letter-spacing: 1px;
-    text-transform: uppercase; border-radius: 50px;
-    transition: all 0.3s ease; display: flex; align-items: center;
-    justify-content: center; gap: 8px; cursor: pointer; outline: none;
-    background: transparent; color: var(--white); border: 1px solid var(--border);
-  }
-  .btn-favorito:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-favorito.is-active {
-    background: var(--accent-dim); color: var(--accent); border-color: var(--accent);
-  }
-  .btn-favorito .icon-star { font-size: 16px; line-height: 1; }
-
-  /* ── MENSAGEM FLASH (CONFIRMAÇÃO DE AÇÃO) ── */
-  .flash-toast {
-    background: var(--accent-dim); color: var(--accent);
-    border: 1px solid rgba(200,168,75,0.3); border-radius: 8px;
-    padding: 14px 20px; font-size: 13px; margin-bottom: 24px;
-    display: flex; align-items: center; gap: 10px;
-  }
+    .glass-panel {
+        background: rgba(32, 31, 31, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .spec-border {
+        border-color: rgba(255, 255, 255, 0.05);
+    }
 </style>
-</head>
-<body>
 
-  <!-- NAVBAR UNIFORMIZADA -->
-  <header class="custom-navbar">
-    <div class="nav-logo-box">
-      <span class="nav-logo-ss">SS</span>
-      <span class="nav-logo-pipe">|</span>
-      <span class="nav-logo-sub">Automóveis</span>
-    </div>
+<!-- Contentor Principal Uniformizado com o Portfólio Geral -->
+<main class="px-6 md:px-20 pt-28 md:pt-36 pb-24 max-w-[1440px] mx-auto bg-[#131313]">
 
-    <ul class="nav-links-box">
-      <li><a href="{{ route('dashboard') }}">Painel</a></li>
-      <li><a href="{{ route('viaturas.index') }}" class="active">Viaturas</a></li>
-      <li><a href="{{ route('clientes.index') }}">Clientes</a></li>
-      <li><a href="{{ route('vendas.index') }}">Vendas</a></li>
-    </ul>
-
-    <div class="nav-user">
-      {{ Auth::user()->name ?? 'Diana Silva' }}
-    </div>
-  </header>
-
-  <div class="container">
-
-    <!-- Link para voltar ao catálogo -->
-    <a href="{{ route('viaturas.index') }}" class="back-link">
-      ← Voltar ao Catálogo
-    </a>
-
-    @if(session('success'))
-      <div class="flash-toast">★ {{ session('success') }}</div>
-    @endif
-
-    <div class="showcase-wrapper">
-
-      <!-- BLOCO DA ESQUERDA: FOTOGRAFIA DA VIATURA CORRIGIDA -->
-      <div class="showcase-media">
-        @if(!empty($viatura->foto))
-          <!-- Correção da sintaxe HTML e rota direta do banco -->
-          <img src="/{{ $viatura->foto }}" alt="Viatura" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-          <span class="no-img-text" style="display:none;">Imagem não encontrada</span>
-        @else
-          <span class="no-img-text">Sem fotografia associada</span>
-        @endif
-      </div>
-
-      <!-- BLOCO DA DIREITA: DADOS E FICHA TÉCNICA -->
-      <div class="showcase-details">
-        <div class="vehicle-eyebrow">{{ $viatura->ano }} &bull; {{ number_format($viatura->quilometros, 0, ',', '.') }} KM</div>
-        <h1 class="vehicle-title">{{ $viatura->marca }}</h1>
-
-        <div class="vehicle-price">
-          {{ number_format($viatura->preco ?? 0, 0, ',', '.') }} <span>€</span>
+    <!-- Cabeçalho de Navegação e Ações Rápidas -->
+    <header class="mb-12 flex justify-between items-end flex-wrap gap-4 pb-6 border-b border-white/5">
+        <div>
+            <span class="text-xs font-mono tracking-widest text-[#b8c3ff] uppercase block mb-1">Showroom Exclusivo</span>
+            <h1 class="text-4xl md:text-5xl font-bold text-white uppercase tracking-tighter" style="font-family: 'Sora', sans-serif;">
+                {{ $viatura->marca }} <span class="text-[#8e90a2] font-light">{{ $viatura->modelo }}</span>
+            </h1>
         </div>
 
-        <!-- Ficha Técnica Avançada -->
-        <div class="specs-list">
-          <div class="spec-row">
-            <span class="spec-label">Modelo</span>
-            <span class="spec-value">{{ $viatura->modelo }}</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Combustível</span>
-            <span class="spec-value">{{ $viatura->combustivel ?? 'Gasóleo' }}</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Tipo de Caixa</span>
-            <span class="spec-value">{{ $viatura->caixa ?? 'Manual' }}</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Cilindrada / Motor</span>
-            <span class="spec-value">{{ $viatura->motor ?? 'N/D' }}</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Estado de Stock</span>
-            <span class="spec-value" style="color: var(--success);">{{ $viatura->estado ?? 'Disponível' }}</span>
-          </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('viaturas.index') }}"
+               class="font-mono text-xs text-[#8e90a2] hover:text-white border border-white/10 px-5 py-3 flex items-center gap-2 uppercase tracking-widest transition-all rounded-sm">
+                <span class="material-symbols-outlined text-sm">arrow_back</span> Voltar ao Stock
+            </a>
+
+            @auth
+                <a href="{{ route('viaturas.edit', $viatura->id) }}"
+                   class="font-mono text-xs text-white bg-[#b8c3ff]/10 hover:bg-[#b8c3ff]/20 border border-[#b8c3ff]/30 px-5 py-3 flex items-center gap-2 uppercase tracking-widest transition-all rounded-sm">
+                    <span class="material-symbols-outlined text-sm">edit</span> Editar Ficha
+                </a>
+            @endauth
+        </div>
+    </header>
+
+    <!-- Layout de Duas Colunas Imersivo (Imagem Grande vs Detalhes Técnicos) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- Painel da Imagem Principal (7 Colunas no Desktop) -->
+        <div class="lg:col-span-7 space-y-4">
+            <div class="relative rounded-sm overflow-hidden border border-white/5 bg-[#141313] aspect-[16/10] shadow-2xl">
+                @if(!empty($viatura->foto))
+                    <img src="{{ asset($viatura->foto) }}" alt="{{ $viatura->marca }} {{ $viatura->modelo }}"
+                         class="w-full h-full object-cover car-image-real">
+                @else
+                    <div class="w-full h-full flex flex-col items-center justify-center space-y-2">
+                        <span class="material-symbols-outlined text-5xl text-white/10">directions_car</span>
+                        <p class="font-mono text-[10px] uppercase text-[#8e90a2] tracking-wider">Sem registo fotográfico</p>
+                    </div>
+                @endif
+
+                <!-- Crachá Dinâmico de Estado Comercial -->
+                <div class="absolute top-4 right-4 bg-[#0e0e0e]/90 backdrop-blur-md px-3 py-1.5 border border-white/10 rounded-sm">
+                    <span class="font-mono text-[10px] uppercase tracking-widest font-medium
+                        {{ $viatura->estado === 'Disponível' ? 'text-[#b8c3ff]' : 'text-[#8e90a2]' }}">
+                        {{ $viatura->estado }}
+                    </span>
+                </div>
+            </div>
         </div>
 
-        <!-- GRUPO DE OPERAÇÕES COMPLETO E FECHADO CORRETAMENTE -->
-        <div class="action-group">
+        <!-- Painel Técnico e Comercial (5 Colunas no Desktop) -->
+        <div class="lg:col-span-5 space-y-6">
 
-          @auth
-            <!-- BOTÃO DE GUARDAR/REMOVER DOS FAVORITOS (GARAGEM PESSOAL) -->
-            @php
-                $jaGuardada = \App\Models\Favorito::where('user_id', auth()->id())
-                    ->where('viatura_id', $viatura->id)
-                    ->exists();
-            @endphp
-            <form action="{{ route('favoritos.toggle', $viatura->id) }}" method="POST">
-              @csrf
-              <button type="submit" class="btn-favorito {{ $jaGuardada ? 'is-active' : '' }}">
-                <span class="icon-star">{{ $jaGuardada ? '★' : '☆' }}</span>
-                {{ $jaGuardada ? 'Guardada na Garagem' : 'Guardar na Garagem' }}
-              </button>
-            </form>
-          @endauth
+            <!-- Caixa Comercial Base -->
+            <div class="bg-[#141313] border border-white/5 rounded-sm p-6 space-y-6 shadow-2xl">
+                <div>
+                    <span class="font-mono text-[9px] text-[#8e90a2] uppercase tracking-widest block">Preço de Comercialização</span>
+                    <p class="text-3xl md:text-4xl font-mono font-bold text-[#b8c3ff] tracking-tight mt-1">
+                        {{ number_format($viatura->preco, 0, ',', '.') }} €
+                    </p>
+                </div>
 
-          @if(auth()->check() && !auth()->user()->isCliente())
-          <a href="{{ route('viaturas.edit', $viatura->id) }}" class="btn-action btn-gold">
-            Editar Especificações
-          </a>
+                <!-- Grelha de Especificações em Lista Corrida -->
+                <div class="divide-y spec-border font-mono text-xs">
+                    <div class="py-3.5 flex justify-between items-center">
+                        <span class="text-[#8e90a2] uppercase tracking-wider">Ano de Registo</span>
+                        <span class="text-white font-bold">{{ $viatura->ano }}</span>
+                    </div>
+                    <div class="py-3.5 flex justify-between items-center">
+                        <span class="text-[#8e90a2] uppercase tracking-wider">Quilometragem</span>
+                        <span class="text-white font-bold">{{ number_format($viatura->quilometros, 0, ',', '.') }} km</span>
+                    </div>
+                    <div class="py-3.5 flex justify-between items-center">
+                        <span class="text-[#8e90a2] uppercase tracking-wider">Identificador Técnico</span>
+                        <span class="text-[#8e90a2] font-mono">#{{ str_pad($viatura->id, 4, '0', STR_PAD_LEFT) }}</span>
+                    </div>
+                </div>
 
-          <a href="{{ route('vendas.create', ['viatura_id' => $viatura->id]) }}" class="btn-action btn-outline">
-            Registar Venda Desta Viatura
-          </a>
+                <!-- Ações do Cliente Final -->
+                @if($viatura->estado === 'Disponível')
+                    <div class="pt-4 space-y-3">
+                        <!-- Formulário ou Rota Simbólica para Adicionar/Remover dos Favoritos -->
+                        <button type="button" class="w-full font-mono text-xs text-white bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 py-3.5 flex items-center justify-center gap-2 uppercase tracking-widest transition-all rounded-sm cursor-pointer">
+                            <span class="material-symbols-outlined text-sm">favorite</span> Guardar na Minha Garagem
+                        </button>
 
-          <form action="{{ route('viaturas.destroy', $viatura->id) }}" method="POST" onsubmit="return confirm('Remover esta viatura permanentemente do stock?');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn-action btn-delete">
-              Eliminar Viatura
-            </button>
-          </form>
-          @endif
+                        <a href="mailto:geral@ssautomoveis.pt?subject=Interesse: {{ $viatura->marca }} {{ $viatura->modelo }} (%23{{ $viatura->id }})"
+                           class="w-full font-mono text-xs text-black bg-[#b8c3ff] hover:bg-white py-3.5 flex items-center justify-center gap-2 uppercase tracking-widest transition-all rounded-sm font-bold text-center">
+                            <span class="material-symbols-outlined text-sm">mail</span> Solicitar Proposta Comercial
+                        </a>
+                    </div>
+                @else
+                    <div class="pt-4">
+                        <div class="p-4 bg-white/[0.02] border border-white/5 rounded-sm text-center font-mono text-[10px] uppercase tracking-widest text-[#8e90a2]">
+                            Este modelo já se encontra reservado ou entregue ao novo proprietário.
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Caixa Adicional: Certificação e Garantia do Stand -->
+            <div class="glass-panel rounded-sm p-5 flex items-start gap-4">
+                <span class="material-symbols-outlined text-[#b8c3ff] text-xl mt-0.5">verified_user</span>
+                <div class="space-y-1">
+                    <h4 class="font-mono text-xs uppercase tracking-widest text-white font-bold">Padrão SS Motors</h4>
+                    <p class="text-xs text-[#8e90a2] leading-relaxed">
+                        Todas as nossas viaturas passam por um rigoroso processo de inspeção mecânica multi-pontos, oferecendo garantia contratual completa e acompanhamento documental personalizado.
+                    </p>
+                </div>
+            </div>
 
         </div>
-
-      </div>
 
     </div>
-  </div>
+</main>
 
-</body>
-</html>
+@endsection

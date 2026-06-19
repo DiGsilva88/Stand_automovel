@@ -4,65 +4,92 @@
 
 @section('content')
 
-<!-- Cabeçalho da Página -->
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-    <div>
-        <span class="font-mono text-xs font-semibold tracking-widest text-surface-tint uppercase block mb-1">Relações de Confiança</span>
-        <h1 class="font-sora text-3xl font-bold text-white">Clientes Registados</h1>
-    </div>
-    <a href="{{ route('clientes.create') }}" class="inline-flex items-center gap-2 bg-surface-tint text-neutral-900 px-5 py-2.5 rounded-xl font-sora font-semibold text-sm hover:opacity-90 transition duration-300 shadow-lg shadow-surface-tint/10">
-        <span class="material-symbols-outlined text-xl">person_add</span>
-        Novo Cliente
-    </a>
-</div>
+<!-- Contentor Principal Uniformizado com as Vendas e Página Inicial -->
+<main class="px-6 md:px-20 pt-28 md:pt-36 pb-24 max-w-[1440px] mx-auto bg-[#131313]">
 
-<!-- Card Principal com Tabela (Estilo Glassmorphism) -->
-<div class="glass-card rounded-2xl overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="border-b border-white/5 bg-white/[0.02]">
-                    <th class="p-4 font-sora text-xs font-semibold uppercase tracking-wider text-tertiary-fixed-dim">Nome</th>
-                    <th class="p-4 font-sora text-xs font-semibold uppercase tracking-wider text-tertiary-fixed-dim">E-mail</th>
-                    <th class="p-4 font-sora text-xs font-semibold uppercase tracking-wider text-tertiary-fixed-dim">Telefone</th>
-                    <th class="p-4 font-sora text-xs font-semibold uppercase tracking-wider text-tertiary-fixed-dim">NIF</th>
-                    <th class="p-4 font-sora text-xs font-semibold uppercase tracking-wider text-tertiary-fixed-dim text-right">Ações</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-white/5">
-                @forelse($clientes as $cliente)
-                    <tr class="hover:bg-white/[0.01] transition duration-150 group">
-                        <td class="p-4">
-                            <a href="{{ route('clientes.show', $cliente->id) }}" class="font-semibold text-white group-hover:text-surface-tint transition duration-150">
-                                {{ $cliente->nome }}
-                            </a>
-                        </td>
-                        <td class="p-4 text-sm text-secondary-fixed-dim">{{ $cliente->email }}</td>
-                        <td class="p-4 text-sm font-mono text-secondary-fixed-dim">{{ $cliente->telefone ?? '—' }}</td>
-                        <td class="p-4 text-sm font-mono text-secondary-fixed-dim">{{ $cliente->nif ?? '—' }}</td>
-                        <td class="p-4 text-right">
-                            <a href="{{ route('clientes.show', $cliente->id) }}" class="inline-flex items-center gap-1 border border-white/10 hover:border-surface-tint text-secondary-fixed-dim hover:text-neutral-900 hover:bg-surface-tint px-3 py-1.5 rounded-xl text-xs font-medium transition duration-300">
-                                <span class="material-symbols-outlined text-sm">visibility</span>
-                                Ficha
-                            </a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" class="p-12 text-center text-secondary-fixed-dim">
-                            <span class="material-symbols-outlined text-4xl text-white/20 block mb-2">person_search</span>
-                            <p class="text-sm">Nenhum cliente registado no sistema.</p>
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
+    <!-- Cabeçalho da Página -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-12 border-b border-white/5 pb-6">
+        <div>
+            <span class="font-mono text-xs tracking-widest text-[#b8c3ff] uppercase block mb-1">Relações de Confiança</span>
+            <h1 class="text-4xl md:text-5xl font-bold text-white uppercase tracking-tighter" style="font-family: 'Sora', sans-serif;">Clientes Registados</h1>
+        </div>
 
-<!-- Paginação Adaptada ao Estilo Dark -->
-<div class="mt-6 dark-pagination">
-    {{ $clientes->links() }}
-</div>
+        <a href="{{ route('clientes.create') }}"
+           class="font-mono text-xs text-white bg-[#b8c3ff]/10 hover:bg-[#b8c3ff]/20 border border-[#b8c3ff]/30 px-6 py-3 flex items-center gap-2 uppercase tracking-widest transition-all rounded-sm group">
+            <span class="material-symbols-outlined text-sm transition-transform group-hover:scale-110">person_add</span>
+            Novo Cliente
+        </a>
+    </div>
+
+    <!-- Card Principal com Tabela (Estilo Glassmorphism Premium) -->
+    <div class="w-full bg-[#141313] border border-white/5 rounded-sm overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto no-scrollbar">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                    <tr class="border-b border-white/5 bg-[#1a1a1a]">
+                        <th class="p-5 text-xs font-bold uppercase tracking-wider text-[#8e90a2]" style="font-family: 'Sora', sans-serif;">Nome</th>
+                        <th class="p-5 text-xs font-bold uppercase tracking-wider text-[#8e90a2]" style="font-family: 'Sora', sans-serif;">E-mail</th>
+                        <th class="p-5 text-xs font-bold uppercase tracking-wider text-[#8e90a2] font-mono">Telefone</th>
+                        <th class="p-5 text-xs font-bold uppercase tracking-wider text-[#8e90a2] font-mono">NIF</th>
+                        <th class="p-5 w-32 text-right"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    @forelse($clientes as $cliente)
+                        <tr class="hover:bg-white/[0.02] transition duration-150 group">
+                            <!-- Nome com Link Estilizado -->
+                            <td class="p-5">
+                                <a href="{{ route('clientes.show', $cliente->id) }}"
+                                   class="text-sm font-bold text-white uppercase tracking-tight group-hover:text-[#b8c3ff] transition duration-150"
+                                   style="font-family: 'Sora', sans-serif;">
+                                    {{ $cliente->nome }}
+                                </a>
+                            </td>
+
+                            <!-- E-mail -->
+                            <td class="p-5 text-xs font-mono text-[#8e90a2] group-hover:text-white/90 transition-colors">
+                                {{ $cliente->email }}
+                            </td>
+
+                            <!-- Telefone -->
+                            <td class="p-5 text-xs font-mono text-white/90">
+                                {{ $cliente->telefone ?? '—' }}
+                            </td>
+
+                            <!-- NIF -->
+                            <td class="p-5 text-xs font-mono text-white/90">
+                                {{ $cliente->nif ?? '—' }}
+                            </td>
+
+                            <!-- Ação Ficha -->
+                            <td class="p-5 text-right">
+                                <div class="flex justify-end font-mono text-xs uppercase tracking-wider">
+                                    <a href="{{ route('clientes.show', $cliente->id) }}"
+                                       class="text-[#8e90a2] hover:text-white transition flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">visibility</span>
+                                        Ficha
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="p-20 text-center text-[#8e90a2]">
+                                <span class="material-symbols-outlined text-4xl text-white/10 block mb-3">person_search</span>
+                                <p class="text-xs font-bold uppercase tracking-widest font-mono">Nenhum cliente registado no sistema.</p>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Paginação Adaptada ao Estilo Dark -->
+    <div class="mt-8 dark-pagination">
+        {{ $clientes->links() }}
+    </div>
+
+</main>
 
 @endsection

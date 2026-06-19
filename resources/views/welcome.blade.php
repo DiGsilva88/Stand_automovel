@@ -41,27 +41,29 @@
 </style>
 
 <!-- ================================================== -->
-<!-- HERO SECTION (Estilo Aether Motors)                 -->
+<!-- HERO SECTION (Card com imagem de fundo)             -->
 <!-- ================================================== -->
-<section class="relative h-screen w-full flex items-center overflow-hidden -mt-20 pt-20">
+<section class="px-6 md:px-20 pt-28 md:pt-36 pb-12 max-w-[1440px] mx-auto">
 
-    <div class="absolute inset-0 z-0">
+    <div class="relative rounded-sm overflow-hidden border border-white/5 min-h-[560px] md:min-h-[680px] flex items-center">
 
-        <img src="{{ asset('\fotos\fundo1.jpg') }}"
-             alt="WallpaperAstonMartin"
-             class="w-full h-full object-cover contrast-115 brightness-50 car-image-real">
-        <div class="absolute inset-0 hero-vignette"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-[#131313]/95 via-[#131313]/40 to-transparent"></div>
-    </div>
+        <!-- Imagem de fundo do card -->
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('fotos/astonmartinwallpaperjpg.jpg') }}"
+                 alt="Aston Martin"
+                 class="w-full h-full object-cover car-image-real">
+            <div class="absolute inset-0 bg-gradient-to-r from-[#131313]/95 via-[#131313]/50 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#131313]/70 via-transparent to-transparent"></div>
+        </div>
 
-    <div class="relative z-10 px-6 md:px-20 w-full max-w-[1440px] mx-auto">
-        <div class="max-w-2xl space-y-8">
+        <!-- Texto sobreposto -->
+        <div class="relative z-10 p-8 md:p-16 max-w-2xl space-y-8">
             <div class="space-y-4">
                 <span class="font-mono text-xs text-[#b8c3ff] uppercase tracking-[0.3em] block flex items-center gap-2">
                     <span class="w-1.5 h-1.5 bg-[#b8c3ff] rounded-full inline-block animate-pulse"></span>
                     Engineered Luxury
                 </span>
-                <h1 class="text-5xl md:text-8xl font-bold text-white leading-none tracking-tighter uppercase" style="font-family: 'Sora', sans-serif;">
+                <h1 class="text-5xl md:text-7xl font-bold text-white leading-none tracking-tighter uppercase" style="font-family: 'Sora', sans-serif;">
                     THE ART OF<br><span class="text-[#8e90a2] font-light">PRECISION.</span>
                 </h1>
             </div>
@@ -79,16 +81,17 @@
                 </a>
             </div>
         </div>
-    </div>
 
-    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-30">
-        <span class="font-mono text-[9px] tracking-widest uppercase text-white">Explore</span>
-        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-        </svg>
+        <!-- Indicador de scroll -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-30 z-10">
+            <span class="font-mono text-[9px] tracking-widest uppercase text-white">Explore</span>
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+
     </div>
 </section>
-
 <!-- ================================================== -->
 <!-- MARCAS PARCEIRAS  -->
 <!-- ================================================== -->
@@ -128,7 +131,36 @@
 
     </div>
 </section>
+<!-- ================================================== -->
+<!-- DUO DE VIATURAS (2 imagens em destaque)             -->
+<!-- ================================================== -->
+<section class="px-6 md:px-20 pb-20 max-w-[1440px] mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+        <a href="{{ route('viaturas.index') }}" class="relative h-[300px] md:h-[420px] rounded-sm overflow-hidden border border-white/5 group block">
+            <img src="{{ asset('fotos\ferrarisetas.jpg') }}"
+                 alt="Aston Martin"
+                 class="w-full h-full object-cover car-image-real transition-transform duration-700 group-hover:scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#131313]/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-6 left-6 z-10">
+                <p class="font-mono text-[10px] text-[#b8c3ff] uppercase tracking-widest font-medium">Ferrari</p>
+                <h3 class="text-2xl font-bold text-white uppercase tracking-tight" style="font-family: 'Sora', sans-serif;">DB12</h3>
+            </div>
+        </a>
+
+        <a href="{{ route('viaturas.index') }}" class="relative h-[300px] md:h-[420px] rounded-sm overflow-hidden border border-white/5 group block">
+            <img src="{{ asset('fotos\ferrari.jpg') }}"
+                 alt="Substituir pelo nome do segundo carro"
+                 class="w-full h-full object-cover car-image-real transition-transform duration-700 group-hover:scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#131313]/70 via-transparent to-transparent"></div>
+            <div class="absolute bottom-6 left-6 z-10">
+                <p class="font-mono text-[10px] text-[#b8c3ff] uppercase tracking-widest font-medium">Ferrari</p>
+                <h3 class="text-2xl font-bold text-white uppercase tracking-tight" style="font-family: 'Sora', sans-serif;">D123</h3>
+            </div>
+        </a>
+
+    </div>
+</section>
 
 
 <!-- ================================================== -->
@@ -177,7 +209,7 @@
                 ['marca' => 'BMW',        'modelo' => 'M4 Competition',   'preco' => '118.500', 'ano' => '2023', 'km' => '12.000', 'estado' => 'Disponível', 'foto' => 'BMW-M4.jpg'],
                 ['marca' => 'Mercedes',   'modelo' => 'Benz A 250 AMG',   'preco' => '38.900',  'ano' => '2021', 'km' => '42.000', 'estado' => 'Disponível', 'foto' => 'mercedes.jpg'],
                 ['marca' => 'Audi',       'modelo' => 'RS6 Avant Perf.',  'preco' => '189.900', 'ano' => '2024', 'km' => '8.000',  'estado' => 'Reservado',  'foto' => 'Audi-RS6.jpg'],
-                ['marca' => 'Tesla',      'modelo' => 'Model Y Long Range','preco' => '46.500',  'ano' => '2023', 'km' => '28.500', 'estado' => 'Disponível', 'foto' => 'Tesla-ModelY.jpg'],
+                ['marca' => 'Tesla',      'modelo' => 'Model Roadster','preco' => '46.500',  'ano' => '2023', 'km' => '28.500', 'estado' => 'Disponível', 'foto' => '2020-tesla-roadster.jpg'],
             ];
         @endphp
 
@@ -233,7 +265,7 @@
 
 @push('scripts')
 <script>
-    // O seu código do script permanece aqui inalterado
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -252,5 +284,39 @@
         card.addEventListener('mousedown', () => card.style.transform = 'scale(0.98) translateY(-4px)');
         card.addEventListener('mouseup',   () => card.style.transform = 'scale(1) translateY(-8px)');
     });
+
+
+        // Controlo das setas do Carrossel de Destaques
+    const carousel = document.getElementById('destaques-carousel');
+    const prevBtn = document.getElementById('destaques-prev');
+    const nextBtn = document.getElementById('destaques-next');
+
+    if (carousel && prevBtn && nextBtn) {
+        // Função para obter a largura dinâmica de um cartão + espaçamento (gap)
+        const getScrollAmount = () => {
+            const firstCard = carousel.querySelector('.glass-card');
+            if (!firstCard) return 340; // Valor padrão caso não encontre cartões
+
+            // Largura do cartão + 20px do gap do Tailwind (gap-5 = 1.25rem = 20px)
+            return firstCard.offsetWidth + 20;
+        };
+
+        // Evento para a seta esquerda (Anterior)
+        prevBtn.addEventListener('click', () => {
+            carousel.scrollBy({
+                left: -getScrollAmount(),
+                behavior: 'smooth'
+            });
+        });
+
+        // Evento para a seta direita (Seguinte)
+        nextBtn.addEventListener('click', () => {
+            carousel.scrollBy({
+                left: getScrollAmount(),
+                behavior: 'smooth'
+            });
+        });
+    }
+
 </script>
 @endpush
