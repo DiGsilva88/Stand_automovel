@@ -1,199 +1,256 @@
-<!DOCTYPE html>
-<html class="dark h-full bg-[#131313]" lang="pt">
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>@yield('title', 'AETHER MOTORS | The Art of Precision')</title>
+@extends('layouts.app')
 
-    {{-- Motor de Renderização do Tailwind via CDN com suporte a plugins --}}
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+@section('title', 'SS MOTORS — Distinção Absoluta')
 
-    {{-- Tipografias e Ícones Premium do Tema Aether --}}
-    <link href="https://googleapis.com" rel="stylesheet">
-    <link href="https://googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="https://jsdelivr.net">
+@section('content')
 
-    <!-- Configuração Nativa do Objeto Tailwind para a Paleta AETHER -->
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "tertiary-fixed-dim": "#bec6e0",
-                        "surface-dim": "#131313",
-                        "secondary-fixed-dim": "#c1c7cf",
-                        "surface-tint": "#b8c3ff",
-                        "secondary": "#c1c7cf",
-                        "error": "#ffb4ab",
-                        "on-tertiary": "#283044",
-                        "on-surface-variant": "#c4c5d9",
-                        "outline": "#8e90a2",
-                        "inverse-surface": "#e5e2e1",
-                        "surface-variant": "#353534",
-                        "primary": "#b8c3ff",
-                        "secondary-container": "#41474e",
-                        "primary-fixed": "#dde1ff",
-                        "tertiary": "#bec6e0",
-                        "outline-variant": "#434656",
-                        "on-primary-container": "#efefff",
-                        "inverse-primary": "#124af0",
-                        "secondary-fixed": "#dde3eb",
-                        "on-secondary-fixed-variant": "#41474e",
-                        "surface-bright": "#3a3939",
-                        "on-background": "#e5e2e1",
-                        "primary-fixed-dim": "#b8c3ff",
-                        "surface-container-highest": "#353534",
-                        "surface": "#131313",
-                        "inverse-on-surface": "#313030",
-                        "on-primary-fixed-variant": "#0035be",
-                        "tertiary-fixed": "#dae2fd",
-                        "background": "#131313",
-                        "on-surface": "#e5e2e1",
-                        "tertiary-container": "#656d84",
-                        "error-container": "#93000a",
-                        "on-secondary-fixed": "#161c22",
-                        "surface-container": "#201f1f",
-                        "on-error-container": "#ffdad6",
-                        "on-primary-fixed": "#001356",
-                        "primary-container": "#2e5bff",
-                        "on-tertiary-fixed-variant": "#3f465c",
-                        "surface-container-low": "#1c1b1b",
-                        "on-primary": "#002388",
-                        "on-tertiary-fixed": "#131b2e",
-                        "on-error": "#690005",
-                        "on-tertiary-container": "#eef0ff",
-                        "on-secondary-container": "#afb6bd",
-                        "surface-container-lowest": "#0e0e0e",
-                        "on-secondary": "#2b3137",
-                        "surface-container-high": "#2a2a2a"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.125rem",
-                        "lg": "0.25rem",
-                        "xl": "0.5rem",
-                        "full": "0.75rem"
-                    },
-                    "spacing": {
-                        "stack-sm": "8px",
-                        "margin-desktop": "80px",
-                        "stack-md": "16px",
-                        "stack-lg": "32px",
-                        "section-gap": "120px",
-                        "gutter": "32px",
-                        "margin-mobile": "24px",
-                        "container-max": "1440px"
-                    },
-                    "fontFamily": {
-                        "label-sm": ["JetBrains Mono"],
-                        "display-lg": ["Sora"],
-                        "body-md": ["Hanken Grotesk"],
-                        "headline-xl": ["Sora"],
-                        "headline-lg": ["Sora"],
-                        "display-lg-mobile": ["Sora"],
-                        "body-lg": ["Hanken Grotesk"]
-                    },
-                    "fontSize": {
-                        "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}],
-                        "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                        "headline-xl": ["48px", {"lineHeight": "1.2", "fontWeight": "600"}],
-                        "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
-                        "display-lg-mobile": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
-                    }
-                },
-            },
-        }
-    </script>
+<style>
+    /* Força o conteúdo a ocupar a largura total do ecrã para o efeito imersivo */
+    main { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
 
-    <style>
-        body {
-            background-color: #131313;
-            color: #e5e2e1;
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-        }
-        .glass-card {
-            background: rgba(32, 31, 31, 0.4);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .glass-card:hover {
-            border-color: rgba(184, 195, 255, 0.3);
-            background: rgba(46, 91, 255, 0.05);
-            transform: translateY(-8px);
-        }
-        .hero-vignette {
-            background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(19,19,19,1) 85%);
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-</head>
-<body class="font-body-md text-body-md overflow-x-hidden min-h-full flex flex-col">
+    /* Definição das novas cores do tema configuradas no cabeçalho */
+    :root {
+        --color-primary: #b8c3ff;
+        --color-surface-dim: #131313;
+        --color-outline: #8e90a2;
+        --color-on-surface-variant: #c4c5d9;
+    }
 
-<!-- Top Navigation Bar (Estilo AETHER Dinâmico) -->
-<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-6 md:px-margin-desktop h-20 bg-[#131313]/80 backdrop-blur-md border-b border-white/10 shadow-[0_40px_40px_-15px_rgba(46,91,255,0.05)]">
-    <a href="{{ route('home') }}" class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tighter uppercase">
-        AETHER MOTORS
-    </a>
+    /* Cartões com opacidade escura para isolar e dar destaque ao tom real da imagem */
+    .glass-card {
+        background: rgba(20, 19, 19, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+        border-color: rgba(184, 195, 255, 0.3);
+        background: rgba(46, 91, 255, 0.02);
+        transform: translateY(-8px);
+    }
+    .hero-vignette {
+        background: linear-gradient(to top, #131313 5%, rgba(19,19,19,0.2) 60%, rgba(19,19,19,0.8) 100%);
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    <!-- Links Centrais Dinâmicos baseados no Perfil Autenticado -->
-    <div class="hidden md:flex items-center gap-stack-lg font-label-sm text-label-sm uppercase tracking-[0.05em]">
-        <a class="text-primary border-b-2 border-primary pb-1" href="{{ route('viaturas.index') }}">SHOWROOM</a>
+    /* Garante fidelidade de cor sem pós-processamento do browser */
+    .car-image-real {
+        mix-blend-mode: normal;
+        object-fit: cover;
+    }
+</style>
 
-        @auth
-            @if(auth()->user()->is_admin)
-                <a class="text-on-surface-variant hover:text-on-surface transition-colors" href="{{ route('dashboard') }}">Painel</a>
-                <a class="text-on-surface-variant hover:text-on-surface transition-colors" href="{{ route('clientes.index') }}">Clientes</a>
-                <a class="text-on-surface-variant hover:text-on-surface transition-colors" href="{{ route('vendas.index') }}">Vendas</a>
-            @else
-                <a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1" href="{{ route('dashboard') }}">
-                    <i class="bi bi-heart-fill text-rose-500 text-[10px]"></i> Minha Garagem
+<!-- ================================================== -->
+<!-- HERO SECTION (Estilo Aether Motors)                 -->
+<!-- ================================================== -->
+<section class="relative h-screen w-full flex items-center overflow-hidden -mt-20 pt-20">
+
+    <div class="absolute inset-0 z-0">
+
+        <img src="{{ asset('\fotos\fundo1.jpg') }}"
+             alt="WallpaperAstonMartin"
+             class="w-full h-full object-cover contrast-115 brightness-50 car-image-real">
+        <div class="absolute inset-0 hero-vignette"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#131313]/95 via-[#131313]/40 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 px-6 md:px-20 w-full max-w-[1440px] mx-auto">
+        <div class="max-w-2xl space-y-8">
+            <div class="space-y-4">
+                <span class="font-mono text-xs text-[#b8c3ff] uppercase tracking-[0.3em] block flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 bg-[#b8c3ff] rounded-full inline-block animate-pulse"></span>
+                    Engineered Luxury
+                </span>
+                <h1 class="text-5xl md:text-8xl font-bold text-white leading-none tracking-tighter uppercase" style="font-family: 'Sora', sans-serif;">
+                    THE ART OF<br><span class="text-[#8e90a2] font-light">PRECISION.</span>
+                </h1>
+            </div>
+            <p class="text-[#c4c5d9] text-sm md:text-base max-w-lg leading-relaxed font-light">
+                Onde o prestígio automóvel encontra a engenharia de alta performance. Uma coleção rigorosamente selecionada para condutores exigentes.
+            </p>
+            <div class="flex flex-wrap gap-4 pt-2">
+                <a href="{{ route('viaturas.index') }}"
+                   class="bg-[#b8c3ff] hover:bg-white text-[#002388] px-8 py-4 font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 rounded-sm">
+                    Ver Viaturas
                 </a>
-            @endif
-        @endauth
+                <a href="{{ route('visitas.create') }}"
+                   class="border border-white/20 hover:border-white/50 text-white px-8 py-4 font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 rounded-sm hover:bg-white/5">
+                    Agendar Test Drive
+                </a>
+            </div>
+        </div>
     </div>
 
-    <!-- Bloco de Autenticação e Pesquisa à Direita -->
-    <div class="flex items-center gap-stack-md">
-        @auth
-            <span class="hidden sm:inline font-mono text-[11px] text-on-surface-variant normal-case">
-                {{ auth()->user()->name }}
-            </span>
-            <form action="{{ route('logout') }}" method="POST" class="inline">
-                @csrf
-                <button type="submit" class="font-label-sm text-label-sm uppercase tracking-[0.05em] text-on-surface hover:text-error transition-all duration-300">
-                    SAIR
-                </button>
-            </form>
-        @else
-            <a href="{{ route('login') }}" class="font-label-sm text-label-sm uppercase tracking-[0.05em] text-on-surface hover:text-primary transition-all duration-300">
-                SELL/LOGIN
-            </a>
-        @endauth
-        <span class="material-symbols-outlined text-primary cursor-pointer select-none">search</span>
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-30">
+        <span class="font-mono text-[9px] tracking-widest uppercase text-white">Explore</span>
+        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
     </div>
-</nav>
+</section>
 
-<!-- Contentor Principal Adaptado ao Layout Global -->
-<main class="w-full flex-grow">
+<!-- ================================================== -->
+<!-- MARCAS PARCEIRAS  -->
+<!-- ================================================== -->
+<section class="py-16 px-6 md:px-20 border-t border-b border-white/5 bg-[#131313] relative z-20">
+    <div class="max-w-[1440px] mx-auto space-y-12">
 
-    {{-- Sistema de Feedback de Notificações Flash em Estilo Aether --}}
-    @if(session('success') || $errors->any())
-        <div class="max-w-[1440px] mx-auto px-6 md:px-margin-desktop pt-24 mt-4">
-            @if(session('success'))
-                <div class="bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 p-4 rounded-sm flex items-center gap-2 text-xs font-mono uppercase tracking-wider">
-                    <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
-                </div>
-            @endif
+        <h2 class="text-center font-mono text-[10px] uppercase tracking-[0.3em] text-[#8e90a2]">
+            Marcas em Showroom
+        </h2>
 
-            @if($errors->any())
-                <div class="bg-rose-950/40 border border-rose-500/30 text-rose-400 p-4 rounded-sm text-xs font-mono uppercase tracking-wider">
-@foreach
-($errors->all() as $erro){{ $erro }}
+        <div class="flex flex-wrap justify-center items-center gap-12 md:gap-24">
+            @php
+    $marcas = [
+        ['nome' => 'BMW',         'logo' => 'bmw.svg'],
+        ['nome' => 'Mercedes',    'logo' => 'mercedes.jpg'],
+        ['nome' => 'Porsche',     'logo' => 'porsche.svg'],
+        ['nome' => 'Lamborghini', 'logo' => 'lamborghini.svg'],
+        ['nome' => 'Ferrari',     'logo' => 'ferrari.svg'],
+        ['nome' => 'Tesla',     'logo' => 'tesla.svg'],
+        ['nome' => 'Audi',     'logo' => 'audi.svg'],
+
+
+
+    ];
+@endphp
+
+@foreach($marcas as $marca)
+<a href="{{ route('viaturas.index', ['marca' => $marca['nome']]) }}"
+   class="h-10 flex items-center justify-center opacity-50 hover:opacity-100 transition-all duration-300 group">
+
+    <img src="{{ asset('fotos/logo/' . $marca['logo']) }}"
+         alt="{{ $marca['nome'] }}"
+          class="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-110 brightness-0 invert">
+</a>
 @endforeach
-@endif@endif
-{{-- Injeção das Vistas (welcome, dashboard, showroom, etc.) --}}@yield('content')@stack('scripts')
+        </div>
+
+    </div>
+</section>
+
+
+
+<!-- ================================================== -->
+<!-- VIATURAS EM DESTAQUE (Carrossel Compacto)          -->
+<!-- ================================================== -->
+<section class="px-6 md:px-20 py-24 max-w-[1440px] mx-auto bg-[#131313]">
+
+    <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-white/5 pb-6 gap-4">
+        <div class="space-y-1">
+            <span class="text-xs font-mono tracking-widest text-[#b8c3ff] uppercase">Coleção Exclusiva</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter" style="font-family: 'Sora', sans-serif;">Viaturas em Destaque</h2>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <a href="{{ route('viaturas.index') }}"
+               class="font-mono text-xs text-[#8e90a2] hover:text-[#b8c3ff] flex items-center gap-2 uppercase tracking-widest transition-colors group">
+                Ver todo o catálogo
+                <svg class="w-3 h-3 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+            </a>
+
+            <!-- Setas de navegação -->
+            <div class="hidden md:flex items-center gap-2">
+                <button type="button" id="destaques-prev"
+                    class="w-9 h-9 flex items-center justify-center border border-white/10 hover:border-[#b8c3ff]/50 hover:bg-[#b8c3ff]/5 text-white transition-all duration-300 rounded-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <button type="button" id="destaques-next"
+                    class="w-9 h-9 flex items-center justify-center border border-white/10 hover:border-[#b8c3ff]/50 hover:bg-[#b8c3ff]/5 text-white transition-all duration-300 rounded-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="destaques-carousel" class="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 no-scrollbar scroll-smooth">
+
+        @php
+            $destaques = [
+                ['marca' => 'Porsche',    'modelo' => '911 Carrera S',    'preco' => '164.900', 'ano' => '2022', 'km' => '15.000', 'estado' => 'Disponível', 'foto' => 'Porsche-911.jpg'],
+                ['marca' => 'BMW',        'modelo' => 'M4 Competition',   'preco' => '118.500', 'ano' => '2023', 'km' => '12.000', 'estado' => 'Disponível', 'foto' => 'BMW-M4.jpg'],
+                ['marca' => 'Mercedes',   'modelo' => 'Benz A 250 AMG',   'preco' => '38.900',  'ano' => '2021', 'km' => '42.000', 'estado' => 'Disponível', 'foto' => 'mercedes.jpg'],
+                ['marca' => 'Audi',       'modelo' => 'RS6 Avant Perf.',  'preco' => '189.900', 'ano' => '2024', 'km' => '8.000',  'estado' => 'Reservado',  'foto' => 'Audi-RS6.jpg'],
+                ['marca' => 'Tesla',      'modelo' => 'Model Y Long Range','preco' => '46.500',  'ano' => '2023', 'km' => '28.500', 'estado' => 'Disponível', 'foto' => 'Tesla-ModelY.jpg'],
+            ];
+        @endphp
+
+        @foreach($destaques as $viatura)
+        <a href="{{ route('viaturas.index') }}"
+           class="glass-card flex flex-col overflow-hidden group min-w-[260px] sm:min-w-[300px] lg:min-w-[320px] snap-start rounded-sm flex-shrink-0">
+
+            <div class="relative h-40 overflow-hidden bg-[#1a1c23]">
+                <img src="{{ asset('fotos/' . $viatura['foto']) }}"
+                     alt="{{ $viatura['marca'] }} {{ $viatura['modelo'] }}"
+                     class="w-full h-full transition-transform duration-700 group-hover:scale-105 car-image-real">
+
+                <div class="absolute top-3 right-3 bg-[#0e0e0e]/90 backdrop-blur-md px-2 py-1 border border-white/10 rounded-sm">
+                    <span class="font-mono text-[9px] uppercase tracking-widest font-medium
+                        {{ $viatura['estado'] === 'Disponível' ? 'text-[#b8c3ff]' : 'text-[#8e90a2]' }}">
+                        {{ $viatura['estado'] }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-4 space-y-3">
+                <div>
+                    <p class="font-mono text-[9px] text-[#b8c3ff] uppercase tracking-widest font-medium">{{ $viatura['marca'] }}</p>
+                    <h3 class="text-lg font-bold text-white uppercase tracking-tight mt-1" style="font-family: 'Sora', sans-serif;">
+                        {{ $viatura['modelo'] }}
+                    </h3>
+                    <p class="font-mono text-sm text-[#b8c3ff] font-bold tracking-wider mt-1">
+                        {{ $viatura['preco'] }} €
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-3 border-t border-white/5 pt-3 gap-2">
+                    <div class="flex flex-col">
+                        <span class="font-mono text-[9px] text-[#8e90a2] uppercase tracking-widest">Ano</span>
+                        <span class="text-sm font-bold text-white mt-1" style="font-family: 'Sora', sans-serif;">{{ $viatura['ano'] }}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-mono text-[9px] text-[#8e90a2] uppercase tracking-widest">Km</span>
+                        <span class="text-sm font-bold text-white mt-1" style="font-family: 'Sora', sans-serif;">{{ $viatura['km'] }}</span>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span class="font-mono text-[9px] text-[#8e90a2] uppercase tracking-widest">Motor</span>
+                        <span class="text-sm font-bold text-[#b8c3ff] mt-1"><span class="material-symbols-outlined text-xs">speed</span></span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        @endforeach
+    </div>
+</section>
+
+@endsection
+
+@push('scripts')
+<script>
+    // O seu código do script permanece aqui inalterado
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('opacity-100', 'translate-y-0');
+                entry.target.classList.remove('opacity-0', 'translate-y-8');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.glass-card').forEach(card => {
+        card.classList.add('opacity-0', 'translate-y-8', 'transition-all', 'duration-700');
+        observer.observe(card);
+    });
+
+    document.querySelectorAll('.glass-card').forEach(card => {
+        card.addEventListener('mousedown', () => card.style.transform = 'scale(0.98) translateY(-4px)');
+        card.addEventListener('mouseup',   () => card.style.transform = 'scale(1) translateY(-8px)');
+    });
+</script>
+@endpush

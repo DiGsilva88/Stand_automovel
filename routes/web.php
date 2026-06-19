@@ -8,7 +8,6 @@ use App\Http\Controllers\VendaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VisitaController;
 use App\Http\Controllers\FavoritoController;
-use App\Http\Middleware\EnsureUserIsAdminOrSeller;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
@@ -29,41 +28,34 @@ Route::post('/marcar-visita', [VisitaController::class, 'store'])->name('visitas
 // ==========================================
 Route::middleware(['web', 'auth', 'verified'])->group(function () {
 
-    // Dashboard Comum
+    // Dashboard Principal do Painel Administrativo
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Área do Cliente (My Garage)
-    Route::get('/my-garage', [FavoritoController::class, 'index'])->name('garage.index');
-    Route::post('/viaturas/{viatura}/favorito', [FavoritoController::class, 'toggle'])->name('favoritos.toggle');
-
-    // Formulário de marcação protegido com sessão ativa
-    Route::get('/marcar-visita', [VisitaController::class, 'create'])->name('visitas.create');
-    
-
-    // ------------------------------------------
-    // ÁREA EXCLUSIVA DO CLIENTE (My Garage)
-    // ------------------------------------------
-    Route::get('/my-garage', [FavoritoController::class, 'index'])->name('garage.index');
-    Route::post('/viaturas/{viatura}/favorito', [FavoritoController::class, 'toggle'])->name('favoritos.toggle');
 
     // Gestão do Perfil do Utilizador (Breeze)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // ------------------------------------------
-    // ROTAS ACESSÍVEIS POR ADMINS E VENDEDORES
-    // ------------------------------------------
-    Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    // Área do Cliente (My Garage)
+    Route::get('/my-garage', [FavoritoController::class, 'index'])->name('garage.index');
+    Route::post('/viaturas/{viatura}/favorito', [FavoritoController::class, 'toggle'])->name('favoritos.toggle');
 
+    // ------------------------------------------------------------
+    // ÁREA EXCLUSIVA DE ADMINISTRADORES (Diana Silva / Admin)
+    // ------------------------------------------------------------
+    Route::group(['middleware' => function ($request, $next) {
+        // Validação direta baseada nos dados fornecidos
+        if (auth()->user()->email === 'admin@ssautomoveis.pt' || (isset(auth()->user()->role) && auth()->user()->role === 'admin')) {
+            return $next($request);
+        }
+        abort(403, 'Acesso restrito aos administradores do sistema.');
+    }], function () {
+
+        // Clientes (Acesso total liberado para o Admin)
         Route::resource('clientes', ClienteController::class);
-        Route::resource('vendas', VendaController::class);
-    });
 
-    // ------------------------------------------
-    // SUBGRUPO EXCLUSIVO DE ADMINISTRADORES
-    // ------------------------------------------
-    Route::middleware(['admin'])->group(function () {
+        // Vendas (Acesso total liberado para o Admin)
+        Route::resource('vendas', VendaController::class);
 
         // Ações Críticas de Viaturas (Criar, Editar, Eliminar)
         Route::resource('viaturas', ViaturaController::class)->except(['index']);
@@ -71,8 +63,7 @@ Route::middleware(['web', 'auth', 'verified'])->group(function () {
         // Lógica de Aceitar/Recusar pedidos de Test Drive
         Route::patch('/admin/visitas/{visita}/confirmar', [VisitaController::class, 'confirmar'])->name('admin.visitas.confirmar');
         Route::patch('/admin/visitas/{visita}/cancelar', [VisitaController::class, 'cancelar'])->name('admin.visitas.cancelar');
-
-    }); // Fecha o grupo admin
+    });
 
 }); // Fecha o grupo auth e verified
 

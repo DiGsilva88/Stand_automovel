@@ -3,26 +3,7 @@
 @section('title', 'Showroom | SS AUTOMÓVEIS')
 
 @section('content')
-{{-- Configuração Local da Palete AETHER para injetar no Tailwind compilado --}}
-<script>
-    tailwind.config = {
-        darkMode: "class",
-        theme: {
-            extend: {
-                colors: {
-                    "surface-dim": "#131313",
-                    "on-surface-variant": "#c4c5d9",
-                    "outline": "#8e90a2",
-                    "primary": "#b8c3ff",
-                    "on-primary": "#002388",
-                    "surface-container": "#201f1f",
-                    "surface-container-lowest": "#0e0e0e",
-                    "on-surface": "#e5e2e1",
-                }
-            }
-        }
-    }
-</script>
+
 
 <style>
     input[type="range"]::-webkit-slider-thumb {
@@ -33,16 +14,26 @@
         cursor: pointer;
         border-radius: 50%;
     }
-    .glass-card {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-        backdrop-filter: blur(20px);
+    /* Mantido apenas para o painel lateral, sem afetar imagens */
+    .filter-panel {
+        background: #0d0e12; /* Fundo escuro sólido para não distorcer cores */
         border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    /* Nova classe para os carros: fundo opaco garante tom real das fotos */
+    .car-card {
+        background: #13151a;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+    }
+    .car-card img {
+        object-fit: cover;
+        mix-blend-mode: normal; /* Garante que nenhuma mistura de cor altere a foto */
     }
 </style>
 
 <div class="pt-10 pb-24 max-w-[1440px] mx-auto px-6 md:px-20 min-h-screen">
 
-    <!-- Cabeçalho Principal (Estilo Headline-AETHER) -->
+    <!-- Cabeçalho Principal -->
     <header class="mb-12">
         <h1 class="text-4xl md:text-7xl font-bold tracking-tighter uppercase text-white mb-2" style="font-family: Sora, sans-serif;">
             THE <span class="font-normal text-[#8e90a2]">SHOWROOM.</span>
@@ -52,10 +43,23 @@
         </p>
     </header>
 
+    {{-- botão geral "Adicionar Viatura" --}}
+    @auth
+        @if(auth()->user()->isAdmin())
+        <div class="mb-8 flex justify-end">
+            <a href="{{ route('viaturas.create') }}"
+               class="inline-flex items-center gap-2 px-6 py-3 bg-[#b8c3ff] text-[#002388] font-mono text-xs font-bold uppercase tracking-widest hover:bg-white transition-colors duration-300 rounded-sm">
+                <span class="material-symbols-outlined text-sm">add</span>
+                Nova Viatura
+            </a>
+        </div>
+        @endif
+    @endauth
+
     <!-- Layout Dividido: Filtros à Esquerda, Lista à Direita -->
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 items-start">
 
-        <!-- PAINEL DE FILTROS (Formulário GET) -->
+        <!-- PAINEL DE FILTROS -->
         <aside class="glass-card p-6 rounded-sm space-y-6">
             <div class="flex items-center justify-between border-b border-white/5 pb-4">
                 <h2 class="font-mono text-xs font-bold uppercase tracking-widest text-white flex items-center gap-2">
@@ -65,14 +69,12 @@
             </div>
 
             <form action="{{ route('viaturas.index') }}" method="GET" class="space-y-6">
-                {{-- Filtro de Marca --}}
                 <div class="flex flex-col gap-2">
                     <label class="font-mono text-[10px] uppercase tracking-wider text-[#8e90a2]">Marca</label>
                     <input type="text" name="marca" value="{{ request('marca') }}" placeholder="Ex: BMW, Porsche..."
                            class="w-full bg-[#0e0e0e] border border-white/10 p-3 text-xs text-white focus:border-[#b8c3ff] focus:outline-none">
                 </div>
 
-                {{-- Filtro de Combustível --}}
                 <div class="flex flex-col gap-2">
                     <label class="font-mono text-[10px] uppercase tracking-wider text-[#8e90a2]">Combustível</label>
                     <select name="combustivel" class="w-full bg-[#0e0e0e] border border-white/10 p-3 text-xs text-white focus:border-[#b8c3ff] focus:outline-none">
@@ -84,7 +86,6 @@
                     </select>
                 </div>
 
-                {{-- Filtro de Preço Máximo Slider --}}
                 <div class="flex flex-col gap-2">
                     <div class="flex justify-between font-mono text-[10px] uppercase text-[#8e90a2]">
                         <span>Preço Máximo</span>
@@ -109,11 +110,16 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse($viaturas as $viatura)
-                    <div class="glass-card flex flex-col overflow-hidden group relative rounded-sm transition-all duration-500 hover:-translate-y-2 hover:border-[#b8c3ff]/30">
+                    <div class="car-card flex flex-col overflow-hidden group relative rounded-sm transition-all duration-500 hover:-translate-y-2 hover:border-[#b8c3ff]/40">
 
-                        {{-- Foto do Veículo --}}
-                        <div class="relative h-56 overflow-hidden bg-[#0e0e0e]">
-                            <img src="{{ $viatura->foto ? asset('fotos/' . $viatura->foto) : asset('fotos/fachada-stand.jpg') }}"
+                        {{-- {-- Foto do Veículo --}}
+                <div class="relative h-56 overflow-hidden bg-[#1a1c23]">
+                    <!-- Filtros grayscale, contrast e brightness removidos para preservar a cor original -->
+                    <img src="{{ $viatura->foto ? asset($viatura->foto) : asset('fotos/fachada-stand.jpg') }}"
+                         alt="{{ $viatura->marca }} {{ $viatura->modelo }}"
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>
+                </di
+                            <img src="{{ $viatura->foto ? asset($viatura->foto) : asset('fotos/fachada-stand.jpg') }}"
                                  alt="{{ $viatura->marca }}"
                                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0 contrast-115 brightness-95"/>
 
@@ -121,10 +127,21 @@
                             @auth
                                 <form action="{{ route('favoritos.toggle', $viatura->id) }}" method="POST" class="absolute top-4 right-4 z-10">
                                     @csrf
-                                    <button type="submit" class="p-2.5 rounded-full bg-[#0e0e0e]/70 text-white hover:text-rose-500 transition-colors duration-300">
-                                        <i class="bi {{ auth()->user()->favorites->contains($viatura->id) ? 'bi-heart-fill text-rose-500' : 'bi-heart' }} text-sm"></i>
+                                    <button type="submit" class="p-2.5 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 text-white hover:text-rose-500 hover:border-rose-500/40 transition-colors duration-300 shadow-lg">
+                                        <i class="bi {{ auth()->user()->favorites->contains($viatura->id) ? 'bi-heart-fill text-rose-500' : 'bi-heart' }} text-base"></i>
                                     </button>
                                 </form>
+                            @endauth
+
+                            {{-- BOTÃO DE EDITAR — visível só para administradores --}}
+                            @auth
+                                @if(auth()->user()->isAdmin())
+                                    <a href="{{ route('viaturas.edit', $viatura->id) }}"
+                                       class="absolute top-4 left-4 z-10 p-2.5 rounded-full bg-[#0e0e0e]/70 text-white hover:text-[#b8c3ff] transition-colors duration-300"
+                                       title="Editar viatura">
+                                        <i class="bi bi-pencil-square text-sm"></i>
+                                    </a>
+                                @endif
                             @endauth
                         </div>
 
@@ -139,36 +156,53 @@
                                 </p>
                             </div>
 
-                            {{-- Especificações Técnicas em Grid Estilo Aether --}}
                             <div class="grid grid-cols-3 border-t border-white/5 pt-4 gap-2 text-left">
                                 <div class="flex flex-col">
                                     <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Ano</span>
                                     <span class="text-xs font-bold text-white">{{ $viatura->ano }}</span>
                                 </div>
-
                                 <div class="flex flex-col">
-    <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Kms</span>
-    {{-- Mudança para bater certo com a base de dados: $viatura->quilometros --}}
-    <span class="text-xs font-bold text-white truncate">
-        {{ number_format($viatura->quilometros ?? 0, 0, ',', '.') }}
-    </span>
-</div>
+                                    <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Kms</span>
+                                    <span class="text-xs font-bold text-white truncate">
+                                        {{ number_format($viatura->quilometros ?? 0, 0, ',', '.') }}
+                                    </span>
+                                </div>
                                 <div class="flex flex-col">
                                     <span class="font-mono text-[9px] uppercase text-[#8e90a2]">Energia</span>
                                     <span class="text-xs font-bold text-white truncate uppercase text-[11px]">{{ $viatura->combustivel }}</span>
                                 </div>
                             </div>
 
-                            {{-- Link de Ação para Marcação Direta --}}
-                            <a href="{{ route('visitas.create', ['viatura_id' => $viatura->id]) }}"
-                               class="w-full text-center py-3 block text-[10px] font-mono font-bold uppercase tracking-widest text-black bg-white hover:bg-[#b8c3ff] transition-colors duration-300">
-                                SOLICITAR TEST DRIVE
-                            </a>
+                            <div class="flex gap-2">
+                                <a href="{{ route('visitas.create', ['viatura_id' => $viatura->id]) }}"
+                                   class="flex-1 text-center py-3 block text-[10px] font-mono font-bold uppercase tracking-widest text-black bg-white hover:bg-[#b8c3ff] transition-colors duration-300">
+                                    SOLICITAR TEST DRIVE
+                                </a>
+
+                                {{-- BOTÃO ELIMINAR — visível só para administradores --}}
+                                @auth
+                                    @if(auth()->user()->isAdmin())
+                                        <form action="{{ route('viaturas.destroy', $viatura->id) }}" method="POST"
+                                              onsubmit="return confirm('Tens a certeza que queres eliminar esta viatura?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="h-full px-4 py-3 text-[10px] font-mono font-bold uppercase tracking-widest text-white bg-rose-900/40 hover:bg-rose-700 transition-colors duration-300">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                @endauth
+                            </div>
                         </div>
 
                     </div>
                 @empty
                     <div class="col-span-full border border-dashed border-white/10 py-16 px-4 text-center rounded-sm bg-[#0e0e0e]/40">
+                        <p class="font-mono text-xs uppercase tracking-widest text-[#8e90a2]">
+                            Nenhuma viatura encontrada com os filtros selecionados.
+                        </p>
+                    </div>
                 @endforelse
             </div>
         </div>
@@ -190,4 +224,4 @@
         }
     });
 </script>
-@endsection {{-- <- GARANTA QUE ESTA LINHA ESTÁ AQUI NO FIM DO FICHEIRO --}}
+@endsection

@@ -12,26 +12,31 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'is_admin', // ou 'role'
+        'name', 'email', 'password', 'role',
     ];
 
-    // ... Outros métodos como o seu es_admin ...
+    /**
+     * Verifica se o utilizador é administrador.
+     */
+    public function isAdmin(): bool
+    {
+        // Validação segura por e-mail ou pelo campo de permissão 'admin'
+    return $this->email === 'admin@ssautomoveis.pt' || $this->role === 'admin';
+    }
 
     /**
      * Relacionamento dos Favoritos da Garagem
      */
-     public function favorites()
+    public function favorites()
     {
-        // Força o Laravel a usar a tabela 'favoritos' e os nomes de coluna padrão
         return $this->belongsToMany(Viatura::class, 'favoritos', 'user_id', 'viatura_id');
     }
 
-       /**
+    /**
      * Obter as marcações feitas por este utilizador baseando-se no nome registado.
      */
     public function visitas()
     {
-        // Como não tem user_id, filtramos as visitas cujo 'nome_cliente' seja igual ao 'name' do utilizador
         return $this->hasMany(\App\Models\Visita::class, 'nome_cliente', 'name');
     }
 }
