@@ -13,29 +13,32 @@ class ViaturaController extends Controller
      */
     public function index(Request $request)
     {
+        // Inicia a consulta base
         $query = Viatura::query();
 
-        // 1. Pesquisa por Marca, Modelo ou Matrícula
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('marca', 'like', "%$search%")
-                  ->orWhere('modelo', 'like', "%$search%")
-                  ->orWhere('matricula', 'like', "%$search%");
-            });
+        // 1. Filtro de Marca (Vem do seu input name="marca")
+        if ($request->filled('marca')) {
+            $query->where('marca', 'like', '%' . $request->marca . '%');
         }
 
-        // 2. Ordenação Dinâmica
+        // 2. Filtro de Preço Máximo (Vem do input name="preco_max")
+        if ($request->filled('preco_max')) {
+            $query->where('preco', '<=', $request->preco_max);
+        }
+
+        // 3. Ordenação Dinâmica Unificada
         $ordenar = $request->get('ordenar', 'id');
-        $direcao = $request->get('direcao', 'desc'); // Alterado para 'desc' para mostrar os mais recentes primeiro por padrão
+        $direcao = $request->get('direcao', 'desc'); // 'desc' mostra os mais recentes primeiro por padrão
         $colunasPermitidas = ['id', 'marca', 'modelo', 'ano', 'preco'];
 
         if (in_array($ordenar, $colunasPermitidas)) {
             $query->orderBy($ordenar, $direcao);
+        } else {
+            $query->latest();
         }
 
-        // 3. Paginação mantendo os parâmetros da URL (Como o termo de pesquisa)
-        $viaturas = $query->paginate(12)->appends($request->query()); // Aumentado para 12 para grelhas de 3 colunas em Tailwind
+        // 4. Paginação de 12 itens mantendo os filtros na URL (QueryString)
+        $viaturas = $query->paginate(12)->withQueryString();
 
         return view('viaturas.index', compact('viaturas'));
     }
@@ -140,7 +143,7 @@ class ViaturaController extends Controller
         // 5. Atualizar na Base de Dados
         $viatura->update($dados);
 
-        return redirect()->route('viaturas.index')->with('success', 'Viatura updated com sucesso!');
+        return redirect()->route('viaturas.index')->with('success', 'Viatura atualizada com sucesso!');
     }
 
     /**
