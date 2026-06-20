@@ -49,11 +49,11 @@
 
         <!-- Imagem de fundo do card -->
         <div class="absolute inset-0 z-0">
-            <img src="{{ asset('fotos/astonmartinwallpaperjpg.jpg') }}"
+            <img src="{{ asset('fotos\aston2.jpg') }}"
                  alt="Aston Martin"
                  class="w-full h-full object-cover car-image-real">
-            <div class="absolute inset-0 bg-gradient-to-r from-[#131313]/95 via-[#131313]/50 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#131313]/70 via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#131313] via-[#131313]/40 to-[#131313]/90"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#131313]/80 via-transparent to-[#131313]/80"></div>
         </div>
 
         <!-- Texto sobreposto -->
@@ -64,10 +64,10 @@
                     Engineered Luxury
                 </span>
                 <h1 class="text-5xl md:text-7xl font-bold text-white leading-none tracking-tighter uppercase" style="font-family: 'Sora', sans-serif;">
-                    THE ART OF<br><span class="text-[#8e90a2] font-light">PRECISION.</span>
+                    THE ART OF<br><span class="text-[#8e90a2] font-light">PRECISION</span>
                 </h1>
             </div>
-            <p class="text-[#c4c5d9] text-sm md:text-base max-w-lg leading-relaxed font-light">
+            <p class="text-[#c4c5d9] text-sm md:text-base font-bold max-w-lg leading-relaxed font-light">
                 Onde o prestígio automóvel encontra a engenharia de alta performance. Uma coleção rigorosamente selecionada para condutores exigentes.
             </p>
             <div class="flex flex-wrap gap-4 pt-2">
@@ -149,7 +149,7 @@
         </a>
 
         <a href="{{ route('viaturas.index') }}" class="relative h-[300px] md:h-[420px] rounded-sm overflow-hidden border border-white/5 group block">
-            <img src="{{ asset('fotos\ferrari.jpg') }}"
+            <img src="{{ asset('fotos\ar020-ferrari-f80.jpg') }}"
                  alt="Substituir pelo nome do segundo carro"
                  class="w-full h-full object-cover car-image-real transition-transform duration-700 group-hover:scale-105">
             <div class="absolute inset-0 bg-gradient-to-t from-[#131313]/70 via-transparent to-transparent"></div>

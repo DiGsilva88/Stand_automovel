@@ -51,11 +51,61 @@ class DashboardController extends Controller
             $faturamentoMensal[] = $totalMes;
         }
 
-        
-        return view('dashboard-admin', compact(
-            'totalViaturas', 'totalDisponiveis', 'totalClientes',
-            'totalVendas', 'valorTotalVendas', 'ultimasVisitas',
-            'faturamentoMensal', 'mesesLabels'
+
+            // ==========================================
+        // LÓGICA DO TOP VENDEDORES (Simulação Segura)
+        // ==========================================
+        // Buscamos utilizadores do tipo administrador ou comerciais registados
+        $usuariosComerciais = \App\Models\User::where('role', 'admin')->take(3)->get();
+        $topVendedores = collect();
+
+        // Valores fixos de teste alinhados com o faturamento de 512.200 €
+        $dadosFicticios = [
+            0 => ['total' => 283400, 'qtd' => 2],
+            1 => ['total' => 189900, 'qtd' => 1],
+            2 => ['total' => 38900,  'qtd' => 1],
+        ];
+
+        foreach ($usuariosComerciais as $index => $user) {
+            if (isset($dadosFicticios[$index])) {
+                $topVendedores->push((object)[
+                    'user' => $user,
+                    'total_faturado' => $dadosFicticios[$index]['total'],
+                    'carros_vendidos' => $dadosFicticios[$index]['qtd']
+                ]);
+            }
+        }
+
+        // Caso a base de dados local só tenha 1 admin, preenchemos o resto do pódio para o design não ficar vazio
+        if ($topVendedores->count() < 3) {
+            $nomesExtras = ['Carlos Antunes (Comercial)', 'Ricardo Jorge (Consultor)'];
+            foreach ($nomesExtras as $index => $nome) {
+                if ($topVendedores->count() >= 3) break;
+                
+                $vendedorExtraId = 1 + $index;
+                $faturamentoExtra = $vendedorExtraId == 1 ? 189900 : 38900;
+                $qtdExtra = $vendedorExtraId == 1 ? 1 : 1;
+
+                $topVendedores->push((object)[
+                    'user' => (object)['name' => $nome],
+                    'total_faturado' => $faturamentoExtra,
+                    'carros_vendidos' => $qtdExtra
+                ]);
+            }
+        }
+
+        return view('dashboard', compact(
+            'totalViaturas',
+            'totalDisponiveis',
+            'totalClientes',
+            'totalVendas',
+            'valorTotalVendas',
+            'ultimasVisitas',
+            'mesesLabels',
+            'faturamentoMensal',
+            'topVendedores'
         ));
+
     }
 }
+
